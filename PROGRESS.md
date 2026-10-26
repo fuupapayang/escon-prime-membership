@@ -15,12 +15,12 @@
 - [x] 1 ヒアリング(管理者メールのみ未確定)
 - [x] 2 素材(許可確認: はい)
 - [x] 3 生成 / check.js OK(WARN: スロット名 .png 3件=.jpg に変更済み, 仮ロゴ) / ローカル確認(トップ・物件シート・登録・タグ出し分け)
-- [x] 4-1 GitHub repo・Pages(https://github.com/fuupapayang/escon-prime-membership 公開URL https://fuupapayang.github.io/escon-prime-membership/ ※未push)
+- [x] 4-1 GitHub repo・Pages(https://github.com/fuupapayang/escon-prime-membership 公開URL https://fuupapayang.github.io/escon-prime-membership/)
 - [x] 4-2 Firebase(Firestore・Auth・Webアプリ・サービスアカウント鍵。管理者ユーザー追加はユーザー申告済み要動作確認)
 - [x] 4-3 ルール配備(2026-10-26 管理者 escon_prime_site@ikiiki.com)
 - [x] 4-4 初期データ(--no-demo)・VAPID(公開鍵はFirestore、秘密鍵はSecret。再作成禁止)
 - [x] 4-6 variables/secrets
-- [ ] 4-7 push・Actions緑
+- [x] 4-7 push・Pages デプロイ緑(2026-10-26)。Push送信Actionは未試験
 - [ ] 4-8 動作確認
 - [ ] 5 引き渡し
 
