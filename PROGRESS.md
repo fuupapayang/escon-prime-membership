@@ -15,7 +15,7 @@
 - [x] 1 ヒアリング(管理者メールのみ未確定)
 - [x] 2 素材(許可確認: はい)
 - [x] 3 生成 / check.js OK(WARN: スロット名 .png 3件=.jpg に変更済み, 仮ロゴ) / ローカル確認(トップ・物件シート・登録・タグ出し分け)
-- [ ] 4-1 GitHub repo・Pages
+- [x] 4-1 GitHub repo・Pages(https://github.com/fuupapayang/escon-prime-membership 公開URL https://fuupapayang.github.io/escon-prime-membership/ ※未push)
 - [ ] 4-2 Firebase(Firestore/Auth/Web app/管理者/鍵)
 - [ ] 4-3 ルール配備
 - [ ] 4-4 初期データ・VAPID
