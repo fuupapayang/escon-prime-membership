@@ -17,3 +17,5 @@ sa.json
 
 # memo files with login info - never publish
 *.txt
+*-sa.json
+*-sa*.json
