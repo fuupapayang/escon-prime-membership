@@ -1,0 +1,18 @@
+{
+  "appName": "エスコン プライムメンバーシップ",
+  "appShortName": "プライム",
+  "propertyName": "ESCON PRIME MEMBERSHIP",
+  "propertyNameEn": "ESCON PRIME MEMBERSHIP",
+  "propertyTagline": "この国の技術を未来へ継承し、次世代の暮らしに新たな価値を。",
+  "areaName": "プライムエリア",
+  "propertySiteUrl": "https://vs.qlea.com/escon/primemembership/",
+  "repoName": "fuupapayang/escon-prime-membership",
+  "githubOwner": "fuupapayang",
+  "firebaseProjectId": "escon-prime-membership-2026",
+  "adminEmails": [
+    "escon_prime_site@ikiiki.com"
+  ],
+  "themeColor": "#0b2a5b",
+  "backgroundColor": "#f5f6f9",
+  "cachePrefix": "escon-prime-ms"
+}
