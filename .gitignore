@@ -14,3 +14,6 @@ sa.json
 *service-account*.json
 *-firebase-adminsdk-*.json
 *.pem
+
+# memo files with login info - never publish
+*.txt
