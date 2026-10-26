@@ -21,7 +21,7 @@
 - [x] 4-4 初期データ(--no-demo)・VAPID(公開鍵はFirestore、秘密鍵はSecret。再作成禁止)
 - [x] 4-6 variables/secrets
 - [x] 4-7 push・Pages デプロイ緑(2026-10-26)。Push送信Actionは未試験
-- [ ] 4-8 動作確認
+- [~] 4-8 動作確認(Push送信Actionは sent 2/failed 0 を確認。会員登録・管理画面・端末での通知表示はユーザー確認待ち)
 - [ ] 5 引き渡し
 
 ## メモ / 変更履歴
@@ -29,3 +29,7 @@
 - localStorage キーを `escon-prime-ms.*` に分離(同じ github.io の別物件アプリとのトークン混線防止)。
 - ローカル確認で `data/db.json`(デモ顧客+ローカルVAPID秘密鍵)ができた → check.js が ERROR にするため、公開前に本人承認のうえ削除。
 - アイコンは仮(ネイビー地+ゴールドの P)。本アイコンは make-icons で差し替え。
+- 2026-10-26 参照サイトの全コンテンツ(NEW RELEASES詳細/Exclusive Residences/ESCON Prime Concierge/GALLERY/Concept Movie/クラフトマンインタビュー)を public/content.js に取り込み、公開済み。タグ「エクスクルーシブ」「プライムコンシェルジュ」を Firestore に追加。
+- アイコンを Figma「P01 BLACK SIGNATURE」に差し替え済み。
+- 未了: テスト会員の削除(本人)/ 引き渡し資料(HANDOVER.md・QR)/ 本公開(ALLOW_INDEX)/ 仮ロゴ差し替え / ローカル data/db.json の削除(承認待ち)。
+- 鍵ファイル(...-sa.json)は ~/Documents に移動済み。コミット禁止(.gitignore済み)。
