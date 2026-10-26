@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" href="icons/favicon-32.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="stylesheet" href="app.css">
-<title>公式サイト｜エスコン プライムメンバーシップ</title>
+<title>HERITAGE AND THE SPIRIT OF CRAFTSMANSHIP｜エスコン プライムメンバーシップ</title>
 <meta name="description" content="この国の技術を未来へ継承し、次世代の暮らしに新たな価値を。エスコン プライムメンバーシップ会員様へ、一般公開前の物件情報をご案内します。">
 <meta property="og:image" content="assets/img/og_img.jpg">
 </head>
@@ -21,6 +21,9 @@
   <a class="logo" href="./" aria-label="エスコン プライムメンバーシップ"><img class="escon-logo inv" src="assets/img/common_escon.svg" alt="ES CON エスコン"><small>PRIME MEMBERSHIP</small></a>
   <a class="head-cta web-only" href="register.html">会員登録</a>
 </header>
+<nav class="subnav" id="subnav" aria-label="ページ内メニュー">
+  <a href="#hero">HOME</a><a href="#releases">NEWS &amp; TOPICS</a><a href="#gallery">GALLERY</a><a href="#movie">Concept Movie</a><a href="#essence">継承される5つの真髄</a><a href="#craftsman">クラフトマンインタビュー</a>
+</nav>
 
 <main>
   <section class="hero" id="hero">
@@ -41,41 +44,84 @@
     <div class="scroll-cue"></div>
   </section>
 
-  <section class="sec" id="philosophy">
+  <section class="sec" id="releases">
     <div class="wrap">
-      <div class="eyebrow">PHILOSOPHY</div>
+      <div class="eyebrow">NEW RELEASES</div>
+      <h2>次代まで輝き続けるために。<br>私たちは、挑戦する。</h2>
+      <p class="lead">エスコンの新規取得事業用地の情報。<br>ご関心のある物件を選んで会員登録いただくと、その物件の最新情報を一般公開前にプッシュ通知でお届けします。</p>
+      <div class="prop-grid" id="newGrid"></div>
+      <p class="note" id="newNote"></p>
+    </div>
+  </section>
+
+  <section class="sec alt" id="exclusive">
+    <div class="wrap">
+      <div class="eyebrow">PRESTIGE COLLECTION</div>
+      <h2>Exclusive Residences</h2>
+      <p class="lead">次代まで輝き続けるために、私たちは、挑戦する。<br>一人ひとりの個性でつくる、特別のステージへ。</p>
+      <div class="prop-grid" id="exGrid"></div>
+    </div>
+  </section>
+
+  <section class="sec" id="concierge">
+    <div class="wrap">
+      <div class="eyebrow">LISTED PROPERTY</div>
+      <h2>ESCON Prime Concierge</h2>
+      <p class="lead">中古物件</p>
+      <div class="prop-grid" id="ccGrid"></div>
+      <div class="center"><button type="button" class="btn btn-line" id="ccMore">その他の物件はこちら</button></div>
+      <div class="info-card">
+        <div class="eyebrow">ESCON PRIME CONCIERGE INFORMATION</div>
+        <h3>エスコンの不動産紹介</h3>
+        <p>エスコンプライムコンシェルジュより、お客様のご要望に沿った物件をご紹介。未公開物件も多数ございます。</p>
+        <a class="btn btn-red web-only" href="register.html?p=concierge">お問い合わせはこちら</a>
+        <div class="standalone-only"><button class="btn btn-red" data-open>限定情報を見る</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec alt" id="gallery">
+    <div class="wrap">
+      <div class="eyebrow">GALLERY</div>
+      <h2>人生を彩るステージへ</h2>
+      <p class="lead">Escon Japan is a life developer that strives for ideal housing and lives. we create a wonderful Japanese future through an ideal living place in an ideal city.</p>
+      <div class="prop-grid" id="glGrid"></div>
+    </div>
+  </section>
+
+  <section class="sec" id="movie">
+    <div class="wrap">
+      <div class="eyebrow">CONCEPT MOVIE</div>
+      <h2>私たちエスコンは<br>次世代に新たな美意識を</h2>
+      <button type="button" class="movie-btn" id="movieBtn" aria-label="コンセプトムービーを再生"><span class="play"></span></button>
+      <p class="lead">Craftsmanshipとして創造し継承する。<br>時に流されず、色褪せないCraftsmanshipが、あなたの人生を輝かせる。</p>
+    </div>
+  </section>
+
+  <section class="sec dark" id="philosophy">
+    <div class="wrap">
+      <div class="eyebrow">IDEAL to REAL</div>
       <h2>私たちのつくるものに、<br>ひとつとして、同じ家はない。</h2>
       <p class="lead">住まう人の幸せを思い描き、その歓びが、次代まで輝き続けるために。私たちは、挑戦する。<br>一人ひとりの個性でつくる、本物のプレステージへ。</p>
-      <blockquote class="pledge">
-        <b>IDEAL to REAL</b>
-        私たちエスコンは、次世代に新たな美意識をCraftsmanshipとして創造し継承する。<br>時に流されず、色褪せないCraftsmanshipが、あなたの人生を輝かせる。
-      </blockquote>
+      <div class="center web-only"><a class="btn btn-red" href="register.html">会員登録はこちらから</a></div>
     </div>
   </section>
 
   <section class="sec alt" id="essence">
     <div class="wrap">
       <div class="eyebrow">THE FIVE ESSENCES</div>
-      <h2>継承される5つの真髄</h2>
-      <p class="lead">心に響く価値を生み出し、日常を特別に彩る力。この5つの要素が、すべての住まいに魂を込め、生活の質を高める原動力です。</p>
-      <div class="ess-list">
-        <article class="ess"><img loading="lazy" src="assets/img/ess_mekiki.jpg" alt="めきき"><div><i>01</i><h3>めきき<small>MEKIKI</small></h3><p>本物を見抜く批評眼</p><span>軽井沢安東美術館　代表理事　安東 泰志</span></div></article>
-        <article class="ess"><img loading="lazy" src="assets/img/ess_takumi.jpg" alt="たくみ"><div><i>02</i><h3>たくみ<small>TAKUMI</small></h3><p>ものづくりの精巧な技術</p><span>一彫堂　四代目 堀川 正久／五代目 堀川 真太郎</span></div></article>
-        <article class="ess"><img loading="lazy" src="assets/img/ess_kiwame.jpg" alt="きわめ"><div><i>03</i><h3>きわめ<small>KIWAME</small></h3><p>極限までに研ぎ澄ますこと</p><span>ガラス工芸士　兼次 直樹</span></div></article>
-        <article class="ess"><img loading="lazy" src="assets/img/ess_kokoromi.jpg" alt="こころみ"><div><i>04</i><h3>こころみ<small>KOKOROMI</small></h3><p>冒険的な進取の精神</p><span>首里琉染 代表　大城 裕美</span></div></article>
-        <article class="ess"><img loading="lazy" src="assets/img/ess_omotenashi.jpg" alt="おもてなし"><div><i>05</i><h3>おもてなし<small>OMOTENASHI</small></h3><p>あたたかく迎える心</p><span>モリアソビ代表　プランニングディレクター　船倉 裕作</span></div></article>
+      <h2>エスコンのフィロソフィー<br>継承される5つの真髄</h2>
+      <p class="lead">エスコンのブランドコンセプト実現のために継承される5つの真髄。それは、心に響く価値を生み出し、日常を特別に彩る力です。私たちが大切にしているこの5つの要素は、すべての住まいに魂を込め、生活の質を高めるための原動力です。</p>
+      <div class="ess-list" id="craftsman">
+        <article class="ess" data-craft="mekiki" tabindex="0"><img loading="lazy" src="assets/img/ess_mekiki.jpg" alt="めきき"><div><i>01</i><h3>めきき<small>MEKIKI</small></h3><p>本物を見抜く批評眼</p><span>軽井沢安東美術館　代表理事　安東 泰志</span><u>READ MORE</u></div></article>
+        <article class="ess" data-craft="takumi" tabindex="0"><img loading="lazy" src="assets/img/ess_takumi.jpg" alt="たくみ"><div><i>02</i><h3>たくみ<small>TAKUMI</small></h3><p>ものづくりの精巧な技術</p><span>一彫堂　四代目 堀川 正久／五代目 堀川 真太郎</span><u>READ MORE</u></div></article>
+        <article class="ess" data-craft="kiwame" tabindex="0"><img loading="lazy" src="assets/img/ess_kiwame.jpg" alt="きわめ"><div><i>03</i><h3>きわめ<small>KIWAME</small></h3><p>極限までに研ぎ澄ますこと</p><span>ガラス工芸士　兼次 直樹</span><u>READ MORE</u></div></article>
+        <article class="ess" data-craft="kokoromi" tabindex="0"><img loading="lazy" src="assets/img/ess_kokoromi.jpg" alt="こころみ"><div><i>04</i><h3>こころみ<small>KOKOROMI</small></h3><p>冒険的な進取の精神</p><span>首里琉染 代表　大城 裕美</span><u>READ MORE</u></div></article>
+        <article class="ess" data-craft="omotenashi" tabindex="0"><img loading="lazy" src="assets/img/ess_omotenashi.jpg" alt="おもてなし"><div><i>05</i><h3>おもてなし<small>OMOTENASHI</small></h3><p>あたたかく迎える心</p><span>モリアソビ代表　プランニングディレクター　船倉 裕作</span><u>READ MORE</u></div></article>
       </div>
+      <h3 class="sub-h">継承される5つの真髄に共鳴するクラフトマン達</h3>
+      <p class="lead">エスコンが共鳴するクラフトマンたちをご紹介します。各カードから、インタビューをお読みいただけます。</p>
       <p class="note">※掲載のクラフトマンの映像は、2024年8月に撮影したものです。</p>
-    </div>
-  </section>
-
-  <section class="sec" id="releases">
-    <div class="wrap">
-      <div class="eyebrow">NEW RELEASES</div>
-      <h2>次代まで輝き続けるために。<br>エスコンの新規取得事業用地</h2>
-      <p class="lead">ご関心のある物件を選んで会員登録いただくと、その物件の最新情報を、一般公開前にプッシュ通知でお届けします。</p>
-      <div class="prop-grid" id="propGrid"></div>
-      <p class="note" id="propNote"></p>
     </div>
   </section>
 
@@ -102,11 +148,12 @@
     <div class="standalone-only"><button class="btn btn-red" data-open>限定情報を見る</button></div>
   </section>
 </main>
-<footer class="site-foot"><img class="escon-logo inv" src="assets/img/common_escon.svg" alt="ES CON エスコン"><div class="prov">提供 株式会社エスコン</div><div><span id="footName">ESCON PRIME MEMBERSHIP</span></div><div class="addr">東京本社／〒105-0001 東京都港区虎ノ門二丁目10番4号 オークラプレステージタワー20F<br>大阪本社／〒541-0044 大阪市中央区伏見町四丁目1番1号 明治安田生命大阪御堂筋ビル13F</div></footer>
+<footer class="site-foot"><img class="escon-logo inv" src="assets/img/common_escon.svg" alt="ES CON エスコン"><div class="prov">提供 株式会社エスコン</div><div><span id="footName">ESCON PRIME MEMBERSHIP</span></div><div class="addr">東京本社／〒105-0001 東京都港区虎ノ門二丁目10番4号 オークラプレステージタワー20F<br>大阪本社／〒541-0044 大阪市中央区伏見町四丁目1番1号 明治安田生命大阪御堂筋ビル13F</div><div class="addr">© ES-CON JAPAN Ltd.</div></footer>
 
 <button class="gentei-fab" id="fab" aria-label="限定情報">限定情報 <span class="badge" id="fabBadge" hidden>0</span></button>
 
 <script src="config.js"></script>
+<script src="content.js"></script>
 <script src="properties.js"></script>
 <script src="app.js"></script>
 </body>

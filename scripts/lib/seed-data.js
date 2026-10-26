@@ -14,7 +14,7 @@ function seed() {
   const rnd = () => ((s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296);
   const iso = (t) => new Date(t).toISOString();
 
-  // 物件ごとに1タグ(public/properties.js の tag と同じ名前)。会員の「ご関心物件」= タグ。Push・限定情報はタグで出し分け。
+  // NEW RELEASES は物件ごとに1タグ、Exclusive Residences / ESCON Prime Concierge は種別ごとに1タグ(public/properties.js の tag と同じ名前)。会員の「ご関心物件」= タグ。Push・限定情報はタグで出し分け。
   const tags = [
     { id: 't001', name: '芦屋', color: '#0b2a5b' },
     { id: 't002', name: '福岡', color: '#1f5c8f' },
@@ -22,6 +22,8 @@ function seed() {
     { id: 't004', name: '西麻布', color: '#6a3d8f' },
     { id: 't005', name: '九段南', color: '#a8483a' },
     { id: 't006', name: 'VIP', color: '#b8860b' },
+    { id: 't007', name: 'エクスクルーシブ', color: '#3a4a6b' },
+    { id: 't008', name: 'プライムコンシェルジュ', color: '#7a5f25' },
   ];
 
   const A = '/assets/img/';

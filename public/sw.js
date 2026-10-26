@@ -1,9 +1,9 @@
 /* プライム Service Worker: app-shell offline cache + web push (base-path & cross-origin-API safe) */
 importScripts('config.js'); // sets self.GENTEI_CONFIG / gUrl / gApi (resolved relative to this file => site root)
-const VERSION = 'escon-prime-ms-v3';
+const VERSION = 'escon-prime-ms-v5';
 const BASE = new URL('./', self.location.href).pathname; // "/" locally, "/<repo>/" on GitHub Pages
 const P = p => BASE + p.replace(/^\//, '');
-const SHELL = ['/', '/index.html', '/register.html', '/install.html', '/app.css', '/app.js', '/config.js', '/properties.js',
+const SHELL = ['/', '/index.html', '/register.html', '/install.html', '/app.css', '/app.js', '/config.js', '/content.js', '/properties.js',
   '/manifest.webmanifest', '/icons/icon-192.png', '/icons/icon-512.png', '/icons/apple-touch-icon.png',
   '/assets/img/common_escon.svg', '/assets/img/common_logo.svg', '/assets/img/top_entry_merit_2.jpg', '/assets/img/top_entry_merit_3.jpg',
   '/assets/img/top_entry_merit_4.jpg', '/assets/img/top_entry_merit_6.jpg', '/assets/img/top_access_2.jpg', '/assets/img/top_access_3.jpg', '/assets/img/top_plan_1.jpg'].map(P);

@@ -88,34 +88,122 @@
   }
   propertyP.then(applyProperty);
 
-  /* ---------- properties (several projects, each = one tag; see properties.js) ---------- */
+  /* ---------- 掲載コンテンツ(content.js = 参照サイト由来) : 物件・ギャラリー・インタビュー ---------- */
+  var SITE = window.SITE || {};
   var PROPS = window.PROPERTIES || [];
   function propByTag(t) { return PROPS.filter(function (x) { return x.tag === t; })[0]; }
-  function renderProps() {
-    var g = $('#propGrid'); if (!g) return;
-    g.innerHTML = PROPS.map(function (p) {
-      return '<button type="button" class="prop-card" data-prop="' + esc(p.id) + '"><span class="pc-img" style="background-image:url(\'' + esc(gUrl('/' + p.img)) + '\')"></span>'
-        + '<span class="pc-body"><em>' + esc(p.region) + '</em><b>' + esc(p.name) + '</b><small>' + esc(p.lead) + '</small><u>詳しく見る</u></span></button>';
-    }).join('');
-    var n = $('#propNote'); if (n) n.textContent = window.PROPERTY_NOTE || '';
-    $$('[data-prop]', g).forEach(function (b) { b.addEventListener('click', function () { openProp(b.dataset.prop); }); });
+  var nl = function (t) { return esc(t).replace(/\n/g, '<br>'); };
+  var A = function (p) { return esc(gUrl('/' + p)); };
+  var bg = function (p) { return "background-image:url('" + A(p) + "')"; };
+  function byId(list, id) { return (list || []).filter(function (x) { return x.id === id; })[0]; }
+
+  function card(cls, id, img, kicker, title, sub, tail) {
+    return '<button type="button" class="' + cls + '" data-id="' + esc(id) + '"><span class="pc-img" style="' + bg(img) + '"></span><span class="pc-body"><em>' + esc(kicker) + '</em><b>' + nl(title) + '</b>' + (sub ? '<small>' + nl(sub) + '</small>' : '') + '<u>' + esc(tail) + '</u></span></button>';
   }
-  function openProp(id) {
-    var p = PROPS.filter(function (x) { return x.id === id; })[0]; if (!p) return;
+  function renderHomeSections() {
+    var g;
+    if ((g = $('#newGrid'))) {
+      g.innerHTML = (SITE.newReleases || []).map(function (n) { return card('prop-card', n.id, n.card, n.region, n.title, '', 'READ MORE'); }).join('');
+      $$('[data-id]', g).forEach(function (b) { b.addEventListener('click', function () { openNew(b.dataset.id); }); });
+      var nt = $('#newNote'); if (nt) nt.textContent = SITE.newNote || '';
+    }
+    if ((g = $('#exGrid'))) {
+      g.innerHTML = (SITE.exclusive || []).map(function (e) { return '<a class="prop-card ex" href="' + esc(e.url) + '" target="_blank" rel="noopener" data-ex="' + esc(e.id) + '"><span class="pc-img" style="' + bg(e.card) + '"></span><span class="pc-body"><em>' + esc(e.region) + '</em><b>' + nl(e.title) + '</b><u>READ MORE ↗</u></span></a>'; }).join('');
+      $$('[data-ex]', g).forEach(function (a) { a.addEventListener('click', function () { logEvent('content', a.dataset.ex); }); });
+    }
+    if ((g = $('#ccGrid'))) {
+      var all = SITE.concierge || [];
+      g.innerHTML = all.map(function (c, i) { return card('prop-card cc' + (i >= 3 ? ' more' : ''), c.id, c.card, c.area, c.title, '', 'READ MORE'); }).join('');
+      $$('[data-id]', g).forEach(function (b) { b.addEventListener('click', function () { openCC(b.dataset.id); }); });
+      var mb = $('#ccMore'); if (mb) { if (all.length <= 3) mb.hidden = true; else mb.addEventListener('click', function () { g.classList.add('open'); mb.hidden = true; }); }
+    }
+    if ((g = $('#glGrid'))) {
+      g.innerHTML = (SITE.gallery || []).map(function (c) { return card('prop-card gl', c.id, c.card, c.region, c.title, '', 'VIEW MORE'); }).join('');
+      $$('[data-id]', g).forEach(function (b) { b.addEventListener('click', function () { openGallery(b.dataset.id); }); });
+    }
+    $$('[data-craft]').forEach(function (b) { b.addEventListener('click', function () { openCraft(b.dataset.craft); }); });
+    var mv = $('#movieBtn'); if (mv && SITE.movie) { mv.style.backgroundImage = "url('https://img.youtube.com/vi/" + encodeURIComponent(SITE.movie.yt) + "/hqdefault.jpg')"; mv.addEventListener('click', function () { openMovie(SITE.movie.yt, 'Concept Movie'); }); }
+  }
+
+  /* generic full-screen sheet */
+  function sheet(inner, opt) {
     var old = $('#propSheet'); if (old) old.remove();
     var sh = document.createElement('div'); sh.id = 'propSheet'; sh.className = 'prop-sheet';
-    var cta = (isApp && token())
-      ? '<button type="button" class="btn btn-red btn-block" id="psOpen">限定情報を見る</button>'
-      : '<a class="btn btn-red btn-block" href="' + esc(gUrl('/register.html')) + '?p=' + esc(p.id) + '">この物件の先行情報を受け取る</a>';
-    sh.innerHTML = '<div class="ps-box" role="dialog" aria-modal="true"><div class="ps-img" style="background-image:url(\'' + esc(gUrl('/' + p.img)) + '\')"></div>'
-      + '<div class="ps-in"><div class="eyebrow">' + esc(p.region) + '｜' + esc(p.status) + '</div><h3>' + esc(p.name) + '</h3>'
-      + '<p class="ps-place">' + esc(p.place) + '</p><p class="ps-lead">' + esc(p.lead) + '</p><p>' + esc(p.body) + '</p>'
-      + '<p class="note">' + esc(window.PROPERTY_NOTE || '') + '</p>' + cta + '<button type="button" class="ps-x" id="psClose">閉じる</button></div></div>';
+    sh.innerHTML = '<div class="ps-box" role="dialog" aria-modal="true">' + inner + '<button type="button" class="ps-close" id="psClose" aria-label="閉じる">×</button></div>';
     document.body.appendChild(sh); document.body.style.overflow = 'hidden';
     var close = function () { sh.remove(); document.body.style.overflow = ''; };
     $('#psClose', sh).addEventListener('click', close);
     sh.addEventListener('click', function (e) { if (e.target === sh) close(); });
     var o = $('#psOpen', sh); if (o) o.addEventListener('click', function () { close(); document.dispatchEvent(new Event('prime:open')); });
+    $$('[data-yt]', sh).forEach(function (b) { b.addEventListener('click', function () { openMovie(b.dataset.yt, b.dataset.t || ''); }); });
+    $$('[data-lb]', sh).forEach(function (im) { im.addEventListener('click', function () { lightbox($$('[data-lb]', sh).map(function (x) { return x.getAttribute('data-lb'); }), +im.dataset.i); }); });
+    return sh;
+  }
+  function ctaFor(key) {
+    return (isApp && token())
+      ? '<button type="button" class="btn btn-red btn-block" id="psOpen">限定情報を見る</button>'
+      : '<a class="btn btn-red btn-block" href="' + esc(gUrl('/register.html')) + '?p=' + esc(key) + '">会員登録して先行情報を受け取る</a>';
+  }
+  function kvTable(rows) {
+    return rows && rows.length ? '<table class="spec">' + rows.map(function (r) { return '<tr><th>' + esc(r[0]) + '</th><td>' + nl(r[1]) + '</td></tr>'; }).join('') + '</table>' : '';
+  }
+  function openNew(id) {
+    var n = byId(SITE.newReleases, id); if (!n) return; logEvent('content', 'new:' + id);
+    sheet('<div class="ps-img tall" style="' + bg(n.mv || n.card) + '"></div><div class="ps-in"><div class="eyebrow">NEW RELEASES｜' + esc(n.region) + '</div><h3>' + nl(n.title) + '</h3>'
+      + (n.body || []).map(function (p) { return '<p>' + nl(p) + '</p>'; }).join('')
+      + (n.map ? '<img class="ps-map" loading="lazy" src="' + A(n.map) + '" alt="地図">' : '')
+      + '<div class="ps-sub">新規取得事業物件の概要</div>' + kvTable(n.outline)
+      + '<p class="note">' + esc(SITE.newNote || '') + '</p>' + ctaFor(n.id) + '</div>');
+  }
+  function openCC(id) {
+    var c = byId(SITE.concierge, id); if (!c) return; logEvent('content', 'cc:' + id);
+    var ph = c.photos || [];
+    sheet('<div class="ps-img tall" style="' + bg(c.card) + '"></div><div class="ps-in"><div class="eyebrow">ESCON Prime Concierge｜' + esc(c.area) + '</div><h3>' + nl(c.title) + '</h3>'
+      + (c.tagline ? '<p class="ps-lead">' + nl(c.tagline) + '</p>' : '')
+      + (c.points && c.points.length ? '<ul class="chips">' + c.points.map(function (p) { return '<li>' + nl(p) + '</li>'; }).join('') + '</ul>' : '')
+      + (c.size ? '<div class="ps-sub">専有面積</div><p><b>' + esc(c.size) + '</b></p>' : '')
+      + (c.features && c.features.length ? '<ul class="bul">' + c.features.map(function (p) { return '<li>' + esc(p) + '</li>'; }).join('') + '</ul>' : '')
+      + ph.map(function (p, i) { return '<img class="ps-photo" loading="lazy" src="' + A(p) + '" alt="" data-lb="' + A(p) + '" data-i="' + i + '">'; }).join('')
+      + '<div class="ps-sub">物件概要</div>' + kvTable(c.outline)
+      + '<p class="note">価格・諸条件は、会員登録後に担当コンシェルジュよりご案内します。</p>' + ctaFor('concierge') + '</div>');
+  }
+  function openGallery(id) {
+    var c = byId(SITE.gallery, id); if (!c) return; logEvent('content', 'gl:' + id);
+    var ph = c.photos || [];
+    sheet('<div class="ps-in"><div class="eyebrow">GALLERY｜' + esc(c.region) + '</div><h3>' + nl(c.title) + '</h3>' + (c.en ? '<p class="ps-en">' + esc(c.en) + '</p>' : '')
+      + (c.lead ? '<p class="ps-lead">' + nl(c.lead) + '</p>' : '') + (c.body ? '<p>' + nl(c.body) + '</p>' : '')
+      + '<div class="gl-grid">' + ph.map(function (p, i) { return '<img loading="lazy" src="' + A(p) + '" alt="" data-lb="' + A(p) + '" data-i="' + i + '">'; }).join('') + '</div>'
+      + '<p class="note">掲載の写真・CGはイメージです。</p>' + ctaFor('exclusive') + '</div>');
+  }
+  function openCraft(id) {
+    var c = byId(SITE.craftsmen, id); if (!c) return; logEvent('content', 'craft:' + id);
+    var h = '<div class="ps-img tall" style="' + bg(c.card) + '"></div><div class="ps-in"><div class="eyebrow">' + esc(c.roman) + '｜' + esc(c.mean) + '</div><h3>' + esc(c.kana) + '<small>' + esc(c.title) + '</small></h3>';
+    if (c.yt) h += '<button type="button" class="btn btn-blue btn-block" data-yt="' + esc(c.yt) + '" data-t="' + esc(c.title) + '">インタビュー動画を見る</button>';
+    (c.blocks || []).forEach(function (b) {
+      if (b.t === 'h') h += '<h4 class="ps-h">' + nl(b.x) + '</h4>';
+      else if (b.t === 'p') h += '<p>' + nl(b.x) + '</p>';
+      else if (b.t === 'img') h += '<img class="ps-photo" loading="lazy" src="' + A(b.src) + '" alt="">';
+    });
+    sheet(h + '<p class="note">※掲載のクラフトマンの映像は、2024年8月に撮影したものです。</p>' + ctaFor('exclusive') + '</div>');
+  }
+  function openMovie(yt, title) {
+    var v = document.createElement('div'); v.className = 'viewer on';
+    v.innerHTML = '<div class="v-bar"><b>' + esc(title || '') + '</b><button class="v-x">CLOSE</button></div><iframe class="v-frame" allow="autoplay; fullscreen; encrypted-media" allowfullscreen src="https://www.youtube-nocookie.com/embed/' + encodeURIComponent(yt) + '?rel=0&autoplay=1&playsinline=1"></iframe>';
+    document.body.appendChild(v); $('.v-x', v).addEventListener('click', function () { v.remove(); });
+    logEvent('content', 'movie:' + yt);
+  }
+  function lightbox(list, i) {
+    var v = document.createElement('div'); v.className = 'lbx'; var idx = i || 0;
+    v.innerHTML = '<img alt=""><button class="lb-x" aria-label="閉じる">×</button><button class="lb-n l" aria-label="前へ">‹</button><button class="lb-n r" aria-label="次へ">›</button><div class="lb-c"></div>';
+    document.body.appendChild(v);
+    var im = $('img', v), c = $('.lb-c', v);
+    function go(n) { idx = (n + list.length) % list.length; im.src = list[idx]; c.textContent = (idx + 1) + ' / ' + list.length; }
+    go(idx);
+    $('.lb-x', v).addEventListener('click', function () { v.remove(); });
+    $('.lb-n.l', v).addEventListener('click', function () { go(idx - 1); });
+    $('.lb-n.r', v).addEventListener('click', function () { go(idx + 1); });
+    var sx = null; v.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
+    v.addEventListener('touchend', function (e) { if (sx == null) return; var dx = e.changedTouches[0].clientX - sx; sx = null; if (dx < -40) go(idx + 1); else if (dx > 40) go(idx - 1); }, { passive: true });
   }
 
   /* ---------- service worker ---------- */
@@ -194,7 +282,7 @@
     var onScroll = function () { head.classList.toggle('solid', window.scrollY > 40); };
     window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
 
-    renderProps();
+    renderHomeSections();
     if (token()) $$('.head-cta,#ctaHero').forEach(function (a) { a.textContent = 'ご登録情報の再送・更新'; });
 
     if (!isApp) return;
