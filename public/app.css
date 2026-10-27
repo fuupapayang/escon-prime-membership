@@ -451,3 +451,13 @@ section[id],#craftsman{scroll-margin-top:64px}
 .after-guide li{margin-bottom:8px}
 .after-guide li span{font-size:12px;color:#6b5314}
 .after-guide .ag-n{margin:4px 0 0;font-size:12px;color:#6b5314;line-height:1.7}
+
+/* 未登録(ゲスト)の「登録を完了する」 */
+.guest-hero{background:rgba(255,255,255,.96);color:var(--ink);border-radius:16px;padding:16px 16px 12px;margin:0 0 16px;box-shadow:0 12px 34px rgba(0,0,0,.35);border:2px solid var(--gold)}
+.guest-hero b{display:block;font-family:var(--serif);color:var(--navy-d);font-size:16px;letter-spacing:.04em;margin-bottom:4px}
+.guest-hero span{display:block;font-size:13px;line-height:1.75;color:#4a556e;margin-bottom:12px}
+.guest-hero .btn{font-size:17px;padding:17px 20px;animation:pulseGold 2.2s infinite}
+.guest-hero .gh-claim{display:block;width:100%;margin-top:8px;border:0;background:none;color:var(--navy);font-size:12px;text-decoration:underline;padding:6px}
+@keyframes pulseGold{0%,100%{box-shadow:0 8px 22px rgba(154,122,53,.35)}50%{box-shadow:0 8px 30px rgba(154,122,53,.8)}}
+.head-cta.finish{animation:pulseGold 2.2s infinite}
+.guest-bar .btn.finish{font-size:15px;padding:12px 20px}

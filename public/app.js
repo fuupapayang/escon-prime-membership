@@ -250,7 +250,7 @@
       + '<p class="cs-d">このアプリで限定情報をご覧いただくには、<b>会員登録</b>が必要です。<br>あてはまる方をお選びください。</p>'
       + '<div class="cs-opt cs-new"><div class="cs-h"><b>A</b> まだ会員登録をしていない方</div>'
       + '<p>お名前とメールアドレスのご登録（約1分・無料）で、すぐにご利用いただけます。</p>'
-      + '<a class="btn btn-red btn-block" href="' + esc(gUrl('/register.html')) + '" id="csReg">会員登録へ進む</a></div>'
+      + '<a class="btn btn-red btn-block" href="' + esc(gUrl('/register.html')) + '" id="csReg">登録を完了する</a></div>'
       + '<div class="cs-opt"><div class="cs-h"><b>B</b> すでに会員登録した方</div>'
       + '<p>ご登録のとき（Safari・Chrome など）に画面に表示された、<b>8桁の「引き継ぎコード」</b>を入力してください。</p>'
       + '<input type="text" id="csCode" inputmode="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="9" placeholder="XXXX-XXXX" aria-label="引き継ぎコード">'
@@ -343,10 +343,22 @@
     if (!token()) {
       /* アプリは開けたが、この端末に会員情報がない: 行き止まりにならないよう、登録・引き継ぎの案内を常に出す */
       document.body.classList.add('is-guest');
+      /* 目立つ場所に「登録を完了する」: ヘッダー・トップ・画面下の3か所 */
+      $$('.head-cta,#ctaHero').forEach(function (x) { x.textContent = '登録を完了する'; x.classList.add('finish'); });
+      var hi = $('.hero-in');
+      if (hi) {
+        var hc = document.createElement('div'); hc.className = 'guest-hero';
+        hc.innerHTML = '<b>会員登録がまだ完了していません</b><span>下のボタンから登録（無料・約1分）を完了すると、限定情報とプッシュ通知をご利用いただけます。</span>'
+          + '<a class="btn btn-red btn-block finish" href="' + esc(gUrl('/register.html')) + '">登録を完了する</a>'
+          + '<button type="button" class="gh-claim" id="ghClaim">すでに登録した方は、引き継ぎコードを入力</button>';
+        hi.insertBefore(hc, hi.firstChild);
+        $('#ghClaim', hc).addEventListener('click', claimSheet);
+        var rw = $('.row.web-only', hi); if (rw) rw.hidden = true;
+      }
       $$('[data-open]').forEach(function (b) { b.addEventListener('click', claimSheet); });
       var bar = document.createElement('div'); bar.className = 'guest-bar';
-      bar.innerHTML = '<div class="gb-t"><b>会員登録がまだ完了していません</b><span>限定情報をご覧いただくには、会員登録（無料）か、引き継ぎコードの入力が必要です。</span></div>'
-        + '<div class="gb-b"><a class="btn btn-red btn-sm" href="' + esc(gUrl('/register.html')) + '">会員登録へ</a><button type="button" class="btn btn-line btn-sm" id="gbClaim">引き継ぎコードを入力</button></div>';
+      bar.innerHTML = '<div class="gb-t"><b>会員登録がまだ完了していません</b><span>「登録を完了する」を押して、お名前とメールアドレスをご登録ください（無料・約1分）。</span></div>'
+        + '<div class="gb-b"><a class="btn btn-red btn-sm finish" href="' + esc(gUrl('/register.html')) + '">登録を完了する</a><button type="button" class="btn btn-line btn-sm" id="gbClaim">引き継ぎコードを入力</button></div>';
       document.body.appendChild(bar); document.body.style.paddingBottom = '130px';
       $('#gbClaim', bar).addEventListener('click', claimSheet);
       claimSheet();
