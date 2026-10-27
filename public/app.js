@@ -283,20 +283,40 @@
     window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
 
     renderHomeSections();
-    /* TOPムービー(参照サイトと同じ YouTube 動画を、音なし・自動再生・ループで背景に敷く)。表示後に読み込み、モーション低減設定の端末では静止画のまま */
+    /* TOPムービー: 参照サイトと同じ YouTube 動画(PC=rzJOeBftwNM 13秒から / スマホ=epWL0sYdzBA)を、音なし・自動再生・終了後は頭から繰り返しで背景に敷く。
+       モーション低減設定の端末では再生せず静止画のまま */
     (function () {
-      var box = $('#heroYt'); if (!box || !box.dataset.yt) return;
+      var box = $('#heroYt'); if (!box) return;
       if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      var id = box.dataset.yt;
+      var sp = window.matchMedia && matchMedia('(max-width: 991px)').matches;
+      var id = sp ? box.dataset.ytSp : box.dataset.yt, startAt = sp ? 0 : parseInt(box.dataset.start || '0', 10);
+      if (!id) return;
+      var holder = document.createElement('div'); box.appendChild(holder);
+      var player;
+      function fit() { /* 全面を覆う大きさ(cover)に、さらに1.3倍して YouTube のタイトルバー・ロゴを枠の外へ */
+        var f = player && player.getIframe && player.getIframe(); if (!f) return;
+        var p = box.parentNode.getBoundingClientRect(), r = 16 / 9, fw = Math.max(p.width, p.height * r) * 1.3;
+        f.style.width = fw + 'px'; f.style.height = (fw / r) + 'px'; f.setAttribute('tabindex', '-1');
+      }
+      function make() {
+        player = new YT.Player(holder, {
+          host: 'https://www.youtube-nocookie.com', videoId: id,
+          playerVars: { rel: 0, autoplay: 1, playsinline: 1, mute: 1, controls: 0, modestbranding: 1, iv_load_policy: 3, disablekb: 1, start: startAt },
+          events: {
+            onReady: function (e) { e.target.mute(); e.target.playVideo(); fit(); },
+            onStateChange: function (e) {
+              if (e.data === 1) { fit(); setTimeout(function () { box.classList.add('on'); }, 600); }
+              if (e.data === 0) { e.target.seekTo(0); e.target.playVideo(); }
+            }
+          }
+        });
+        window.addEventListener('resize', fit);
+      }
       function start() {
-        var f = document.createElement('iframe');
-        f.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?autoplay=1&mute=1&controls=0&loop=1&playlist=' + encodeURIComponent(id) + '&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1';
-        f.allow = 'autoplay; encrypted-media; picture-in-picture'; f.setAttribute('tabindex', '-1'); f.title = 'TOP MOVIE'; f.loading = 'lazy';
-        f.addEventListener('load', function () { setTimeout(function () { box.classList.add('on'); }, 1200); });
-        box.appendChild(f);
-        /* 全面を覆う大きさ(cover)。さらに1.3倍に拡大し、YouTube のタイトルバー・ロゴを枠の外に追い出す */
-        function fit() { var p = box.parentNode.getBoundingClientRect(), w = p.width, h = p.height, r = 16 / 9, fw = Math.max(w, h * r) * 1.3; f.style.width = fw + 'px'; f.style.height = (fw / r) + 'px'; }
-        fit(); f.addEventListener('load', fit); window.addEventListener('resize', fit);
+        if (window.YT && YT.Player) return make();
+        var prev = window.onYouTubeIframeAPIReady;
+        window.onYouTubeIframeAPIReady = function () { if (prev) prev(); make(); };
+        var t = document.createElement('script'); t.src = 'https://www.youtube.com/iframe_api'; document.head.appendChild(t);
       }
       if (document.readyState === 'complete') start(); else window.addEventListener('load', start);
     })();
