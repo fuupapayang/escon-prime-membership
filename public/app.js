@@ -775,21 +775,97 @@
         ['「アプリをインストール」をタップ', 'メニューの中の<b>「アプリをインストール」</b>（または「ホーム画面に追加」）を押します。', ART.and2],
         ['「インストール」をタップ', '確認の画面で、<b>「インストール」</b>を押します。数秒で、ホーム画面にアイコンが追加されます。', ART.and3],
         ['完成！ホーム画面のアイコンから開く', 'ホーム画面にできた「プライム」のアイコンを押すと、限定情報をご覧いただけます。', ART.ios4]
-      ],
-      pc: [
-        ['アドレスバー右端のアイコンをクリック', 'Chrome / Edge の<b>アドレスバーの右端</b>にあるインストールのアイコン（モニターに下矢印）を押します。', ART.pc1],
-        ['「インストール」をクリック', '表示された小さな画面で<b>「インストール」</b>を押します。', ART.pc2],
-        ['アプリが起動します', '専用のウィンドウでアプリが開きます。デスクトップや Dock にもアイコンが追加されます。'],
-        ['完成！いつでも限定情報へ', '次回からは、アイコンを押すだけで限定情報をご覧いただけます。']
       ]
     };
+    /* ---- パソコン: ブラウザ別(Chrome / Edge / Safari(Mac) / Firefox)の手順と図 ---- */
+    var DOM = 'fuupapayang.github.io';
+    function dots(x, y) { return '<g fill="#555"><circle cx="' + x + '" cy="' + (y - 6) + '" r="2.2"/><circle cx="' + x + '" cy="' + y + '" r="2.2"/><circle cx="' + x + '" cy="' + (y + 6) + '" r="2.2"/></g>'; }
+    function browserBase(dotsX) { /* ブラウザの窓(上にアドレスバー) */
+      return '<rect width="320" height="150" fill="#eef1f8"/><rect x="6" y="5" width="308" height="140" rx="8" fill="#fff" stroke="#cdd5e4"/><path d="M6 13a8 8 0 0 1 8-8h292a8 8 0 0 1 8 8v26H6z" fill="#dde3f0"/>'
+        + '<rect x="40" y="11" width="212" height="22" rx="11" fill="#fff"/>' + tx(54, 26, DOM, { s: 10, c: '#555' }) + dots(dotsX || 296, 22);
+    }
+    function installIco(x, y, plus) { /* モニター + 下矢印(または+) */
+      return '<g transform="translate(' + x + ',' + y + ')" fill="none" stroke="#0b2a5b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="-8" y="-7" width="16" height="11" rx="2"/>' + (plus ? '<path d="M0-5v6M-3-2h6"/>' : '<path d="M0-4v5M-3-1l3 3 3-3"/>') + '<path d="M-4 7h8"/></g>';
+    }
+    function menuList(x, y, w, items, hiIdx, sub) { /* ドロップダウンの図 */
+      var o = '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + (items.length * 20 + 10) + '" rx="8" fill="#fff" stroke="#cdd5e4"/>';
+      items.forEach(function (t, k) { o += tx(x + 10, y + 21 + k * 20, t, { s: 10, c: k === hiIdx ? '#0b2a5b' : '#8a94ab', w: k === hiIdx ? 700 : 400 }); });
+      if (hiIdx != null) o += hl(x + 3, y + 8 + hiIdx * 20, w - 6, 20, 6);
+      return o;
+    }
+    var PCA = {
+      c1: art(browserBase() + installIco(240, 22) + hl(224, 10, 32, 26, 13) + tx(160, 80, 'アドレスバーの右端にあるこのアイコン', { a: 'middle', w: 700, c: '#9a7a35', s: 12 }) + tx(160, 100, '（モニターに下向きの矢印）をクリック', { a: 'middle', w: 700, c: '#9a7a35', s: 12 }) + tx(160, 126, '※見つからないときは、次の「メニューから」の手順へ', { a: 'middle', s: 9, c: '#8a94ab' })),
+      c2: art(browserBase() + hl(283, 9, 26, 26, 13) + menuList(150, 38, 160, ['新しいタブ', '履歴', 'ダウンロード', 'キャスト、保存、共有  ›', '拡張機能'], 3) + tx(70, 70, '① 右上の「︙」', { a: 'middle', w: 700, c: '#9a7a35', s: 11 }) + tx(70, 90, '② 「キャスト、保存、', { a: 'middle', w: 700, c: '#9a7a35', s: 10 }) + tx(70, 104, '共有」にカーソル', { a: 'middle', w: 700, c: '#9a7a35', s: 10 })),
+      c3: art(browserBase() + menuList(14, 38, 150, ['キャスト、保存、共有  ›'], null) + menuList(170, 38, 146, ['名前を付けて保存…', 'ページをアプリとして', 'インストール…', 'QRコードを作成'], null) + hl(173, 65, 140, 42, 6) + tx(24, 100, 'ここを選ぶ →', { s: 11, w: 700, c: '#9a7a35' })),
+      c4: art('<rect width="320" height="150" fill="#cfd5e3"/><rect x="50" y="14" width="220" height="122" rx="12" fill="#fff"/><image href="' + ICON + '" x="66" y="28" width="38" height="38"/>' + tx(112, 44, 'アプリをインストールしますか?', { s: 10, w: 700 }) + tx(114, 60, 'プライム  ' + DOM, { s: 9, c: '#777' }) + tx(150, 118, 'キャンセル', { s: 11, a: 'middle', c: '#777' }) + '<rect x="188" y="98" width="68" height="28" rx="6" fill="#0b2a5b"/>' + tx(222, 117, 'インストール', { s: 11, a: 'middle', c: '#fff', w: 700 }) + hl(182, 92, 80, 40, 10)),
+      c5: art('<rect width="320" height="150" fill="#eef1f8"/><rect x="40" y="12" width="240" height="126" rx="8" fill="#fff" stroke="#cdd5e4"/><rect x="40" y="12" width="240" height="22" rx="8" fill="#0b2a5b"/><image href="' + ICON + '" x="48" y="15" width="16" height="16"/>' + tx(70, 27, 'プライム', { s: 10, c: '#fff', w: 700 }) + tx(160, 80, '専用のウィンドウで開きます', { a: 'middle', w: 700, c: '#0b2a5b', s: 12 }) + tx(160, 100, '（アドレスバーのない、アプリの画面）', { a: 'middle', s: 9, c: '#8a94ab' })),
+      e1: art(browserBase() + installIco(240, 22, true) + hl(224, 10, 32, 26, 13) + tx(160, 80, 'アドレスバーの右端にある', { a: 'middle', w: 700, c: '#9a7a35', s: 12 }) + tx(160, 100, '「アプリが利用可能」のアイコンをクリック', { a: 'middle', w: 700, c: '#9a7a35', s: 12 }) + tx(160, 126, '※見つからないときは、次の「メニューから」の手順へ', { a: 'middle', s: 9, c: '#8a94ab' })),
+      e2: art(browserBase() + hl(283, 9, 26, 26, 13) + menuList(176, 38, 134, ['新しいタブ', 'お気に入り', 'アプリ  ›', '拡張機能'], 2) + tx(80, 62, '① 右上の「…」', { a: 'middle', w: 700, c: '#9a7a35', s: 11 }) + tx(80, 84, '② 「アプリ」を選ぶ', { a: 'middle', w: 700, c: '#9a7a35', s: 11 })),
+      e3: art(browserBase() + menuList(14, 38, 130, ['アプリ  ›'], 0) + menuList(150, 38, 164, ['このサイトをアプリとして', 'インストール', 'アプリを管理'], 0) + hl(154, 40, 156, 42, 6) + tx(24, 112, '「このサイトをアプリとして', { s: 10, w: 700, c: '#9a7a35' }) + tx(24, 126, 'インストール」を選ぶ', { s: 10, w: 700, c: '#9a7a35' })),
+      e4: art('<rect width="320" height="150" fill="#cfd5e3"/><rect x="40" y="10" width="240" height="130" rx="12" fill="#fff"/><image href="' + ICON + '" x="56" y="24" width="38" height="38"/>' + tx(104, 40, 'アプリのインストール', { s: 11, w: 700 }) + tx(104, 56, 'プライム', { s: 10, c: '#777' }) + tx(60, 84, '☑ デスクトップ  ☑ スタート  ☐ タスクバー', { s: 9, c: '#555' }) + tx(140, 124, 'キャンセル', { s: 11, a: 'middle', c: '#777' }) + '<rect x="176" y="104" width="80" height="26" rx="13" fill="#0b2a5b"/>' + tx(216, 121, 'インストール', { s: 11, a: 'middle', c: '#fff', w: 700 }) + hl(170, 98, 92, 38, 18)),
+      s1: art('<rect width="320" height="150" fill="#eef1f8"/><rect x="0" y="0" width="320" height="20" fill="#2b2f3a"/>' + tx(10, 14, '', { s: 10 }) + tx(24, 14, 'Safari', { s: 10, c: '#fff', w: 700 }) + tx(70, 14, 'ファイル', { s: 10, c: '#fff' }) + tx(116, 14, '編集', { s: 10, c: '#fff' }) + tx(146, 14, '表示', { s: 10, c: '#fff' }) + tx(176, 14, '履歴', { s: 10, c: '#fff' }) + tx(206, 14, 'ブックマーク', { s: 10, c: '#fff' }) + hl(65, 2, 50, 17, 5) + '<rect x="14" y="30" width="292" height="110" rx="8" fill="#fff" stroke="#cdd5e4"/>' + tx(160, 80, '画面一番上のメニューバーの', { a: 'middle', w: 700, c: '#9a7a35', s: 12 }) + tx(160, 100, '「ファイル」をクリック', { a: 'middle', w: 700, c: '#9a7a35', s: 12 })),
+      s2: art('<rect width="320" height="150" fill="#eef1f8"/><rect x="0" y="0" width="320" height="20" fill="#2b2f3a"/>' + tx(24, 14, 'Safari', { s: 10, c: '#fff', w: 700 }) + tx(70, 14, 'ファイル', { s: 10, c: '#fff', w: 700 }) + menuList(60, 22, 190, ['新規ウインドウ', '新規タブ', 'Dockに追加…', '共有  ›'], 2) + tx(258, 77, '← ここ', { s: 10, w: 700, c: '#9a7a35' })),
+      s3: art('<rect width="320" height="150" fill="#cfd5e3"/><rect x="40" y="10" width="240" height="130" rx="14" fill="#fff"/><image href="' + ICON + '" x="56" y="24" width="44" height="44"/>' + tx(110, 38, 'Dockに追加', { s: 12, w: 700 }) + '<rect x="110" y="46" width="150" height="22" rx="5" fill="#f3f5fa" stroke="#cdd5e4"/>' + tx(118, 61, 'プライム', { s: 11 }) + tx(60, 92, '名前はそのままでOKです', { s: 9, c: '#8a94ab' }) + tx(140, 126, 'キャンセル', { s: 11, a: 'middle', c: '#777' }) + '<rect x="176" y="108" width="80" height="24" rx="12" fill="#0b2a5b"/>' + tx(216, 124, '追加', { s: 11, a: 'middle', c: '#fff', w: 700 }) + hl(170, 102, 92, 36, 18)),
+      s4: art('<rect width="320" height="150" fill="#cfd9ea"/><rect x="40" y="108" width="240" height="34" rx="12" fill="rgba(255,255,255,.75)" stroke="#bdc6d8"/>' + [0, 1, 2, 3].map(function (n) { return '<rect x="' + (58 + n * 38) + '" y="113" width="24" height="24" rx="6" fill="' + ['#9db4d9', '#c9a4a4', '#a9c8b0', '#d6c58f'][n] + '"/>'; }).join('') + '<image href="' + ICON + '" x="214" y="112" width="26" height="26"/>' + hl(208, 106, 38, 38, 10) + tx(160, 60, 'Dock(画面下)に「プライム」が追加されます', { a: 'middle', w: 700, c: '#0b2a5b', s: 12 }) + tx(160, 80, 'クリックするとアプリが開きます', { a: 'middle', s: 10, c: '#555' }))
+    };
+    var PC_VARIANTS = [{ k: 'chrome', n: 'Chrome' }, { k: 'edge', n: 'Edge' }, { k: 'safari', n: 'Safari（Mac）' }, { k: 'firefox', n: 'Firefox' }];
+    var pcBrowser = /Edg\//.test(ua) ? 'edge' : /Firefox\//.test(ua) ? 'firefox' : /Chrome\/|CriOS/.test(ua) ? 'chrome' : /Safari\//.test(ua) ? 'safari' : 'chrome';
+    var isMac = /Macintosh|Mac OS X/.test(ua);
+    var PCS = {
+      chrome: {
+        sum: ['右端のアイコン', 'インストール', '完成'],
+        steps: [
+          ['①アドレスバーの右端のアイコンをクリック', '画面の一番上、https:// で始まる<b>アドレスバーの右端</b>に、<b>モニターに下向きの矢印</b>のアイコンがあります。それをクリックします。', PCA.c1, '表示されないときは、下の「メニューから追加する方法」（手順2〜3）を行ってください。すでに追加済みの場合は、このアイコンは出ません。'],
+          ['②（アイコンがないとき）右上の「︙」から選ぶ', '画面の<b>右上の「︙」</b>（縦に点が3つ）をクリックします。出てきたメニューの<b>「キャスト、保存、共有」</b>にカーソルを合わせます。', PCA.c2, 'Chrome のバージョンによっては、メニュー内に「アプリをインストール」「ショートカットを作成」と直接出ることもあります。'],
+          ['③「ページをアプリとしてインストール」をクリック', '横に開いたメニューから<b>「ページをアプリとしてインストール」</b>（「アプリをインストール」と表示される場合もあります）をクリックします。', PCA.c3],
+          ['④「インストール」をクリック', '表示された小さな画面で<b>「インストール」</b>を押します。', PCA.c4],
+          ['⑤完成！専用ウィンドウで開きます', 'アドレスバーのない専用のウィンドウでアプリが開きます。' + (isMac ? 'アプリは「アプリケーション」フォルダの「Chrome アプリ」に入り、Dock にも表示されます。' : 'スタートメニューにも追加されます（タスクバーへのピン留めもできます）。') + '次回からは、そのアイコンから開けます。', PCA.c5]
+        ]
+      },
+      edge: {
+        sum: ['右端のアイコン', 'インストール', '完成'],
+        steps: [
+          ['①アドレスバーの右端のアイコンをクリック', '画面一番上のアドレスバーの<b>右端</b>に、<b>「アプリが利用可能」</b>のアイコン（モニターに＋マーク）が出ます。それをクリックします。', PCA.e1, '表示されないときは、次の手順2〜3でメニューから追加できます。'],
+          ['②（アイコンがないとき）右上の「…」→「アプリ」', '画面の<b>右上の「…」</b>（横に点が3つ）をクリックし、メニューの<b>「アプリ」</b>を選びます。', PCA.e2],
+          ['③「このサイトをアプリとしてインストール」をクリック', '横に出たメニューの<b>「このサイトをアプリとしてインストール」</b>をクリックします。', PCA.e3],
+          ['④「インストール」をクリック', '確認の画面で<b>「インストール」</b>を押します。続けて「デスクトップ・スタート・タスクバーに追加するか」を聞かれたら、お好みで選んで<b>「許可」</b>を押してください。', PCA.e4],
+          ['⑤完成！専用ウィンドウで開きます', 'アプリの専用ウィンドウが開きます。次回からは、デスクトップやスタートメニューのアイコンから開けます。', PCA.c5]
+        ]
+      },
+      safari: {
+        sum: ['ファイル', 'Dockに追加', '追加'],
+        note: 'Mac の Safari（<b>Safari 17 以降・macOS Sonoma 14 以降</b>）で使えます。古い macOS の場合は、Chrome か Edge をお使いください。',
+        steps: [
+          ['①画面一番上の「ファイル」をクリック', '画面の<b>一番上にあるメニューバー</b>（ブラウザの窓の外側、画面の最上部）で<b>「ファイル」</b>をクリックします。', PCA.s1, 'ブラウザ右上の「共有」ボタン（四角から矢印が出ているマーク）をクリックして、その中の「Dockに追加…」を選んでも同じです。'],
+          ['②「Dockに追加…」をクリック', '開いたメニューの中から<b>「Dockに追加…」</b>をクリックします。', PCA.s2],
+          ['③「追加」をクリック', '名前は「プライム」のままで、<b>「追加」</b>を押します。', PCA.s3],
+          ['④完成！Dockのアイコンから開く', '画面下の Dock に「プライム」のアイコンができます。次回からは、このアイコンをクリックするだけで開けます。通知は、このアイコンから開いたアプリでオンにしてください。', PCA.s4]
+        ]
+      },
+      firefox: {
+        sum: ['別のブラウザで開く', 'インストール', '完成'],
+        note: '<b>Firefox は、ホーム画面（アプリ）への追加に対応していません。</b>下のどちらかのブラウザでこのページを開き直してください。',
+        steps: [
+          ['Chrome / Edge / Safari（Mac）で開き直す', 'このページのアドレス（URL）をコピーして、<b>Chrome・Edge・Safari（Mac）</b>のいずれかに貼り付けて開き直してください。' , null, '開き直したあとは、上の「Chrome」「Edge」「Safari（Mac）」のタブから手順をご覧ください。'],
+          ['ブラウザのままでもご覧いただけます', 'アプリに追加しなくても、このサイトをブックマークしておけば、いつでも限定情報をご覧いただけます。プッシュ通知を受け取りたい場合は、上のブラウザへの追加をお勧めします。', null]
+        ]
+      }
+    };
+    var pcVar = pcBrowser;
     var LABEL = { ios: 'iPhone / iPad', android: 'Android', pc: 'パソコン' };
     function draw() {
-      $('#envLabel').textContent = LABEL[platform] + (platform === 'ios' ? (isSafari ? '（Safari）' : '') : '');
+      $('#envLabel').textContent = LABEL[platform] + (platform === 'ios' ? (isSafari ? '（Safari）' : '') : platform === 'pc' ? '（' + PC_VARIANTS.filter(function (v) { return v.k === pcBrowser; })[0].n + '）' : '');
       $$('#tabs button').forEach(function (b) { b.classList.toggle('on', b.dataset.env === env); });
-      var SUM = { ios: ['共有ボタン', 'ホーム画面に追加', '追加'], android: ['右上の︙', 'アプリをインストール', 'インストール'], pc: ['アドレスバーのアイコン', 'インストール', '完成'] }[env];
+      var sub = $('#subTabs');
+      if (sub) {
+        sub.hidden = env !== 'pc';
+        sub.innerHTML = PC_VARIANTS.map(function (v) { return '<button type="button" data-v="' + v.k + '" class="' + (v.k === pcVar ? 'on' : '') + '">' + v.n + (v.k === pcBrowser ? '<i>お使いのブラウザ</i>' : '') + '</button>'; }).join('');
+        $$('button', sub).forEach(function (b) { b.addEventListener('click', function () { pcVar = b.dataset.v; draw(); }); });
+      }
+      var SUM = { ios: ['共有ボタン', 'ホーム画面に追加', '追加'], android: ['右上の︙', 'アプリをインストール', 'インストール'], pc: PCS[pcVar].sum }[env];
       $('#sumLine').innerHTML = '<span class="sum-h">この3回タップするだけ</span>' + SUM.map(function (t, i) { return '<span class="sum-i"><b>' + (i + 1) + '</b>' + t + '</span>'; }).join('<span class="sum-a">›</span>');
-      $('#steps').innerHTML = STEPS[env].map(function (s, i) { return '<div class="step-card"><div class="step-no">0' + (i + 1) + '</div><div class="step-body"><h3>' + s[0] + '</h3><p>' + s[1] + '</p>' + (s[2] || '') + '</div></div>'; }).join('');
+      var list = env === 'pc' ? PCS[pcVar].steps : STEPS[env];
+      $('#steps').innerHTML = (env === 'pc' && PCS[pcVar].note ? '<div class="pc-note">' + PCS[pcVar].note + '</div>' : '') + list.map(function (s, i) { return '<div class="step-card"><div class="step-no">0' + (i + 1) + '</div><div class="step-body"><h3>' + s[0] + '</h3><p>' + s[1] + '</p>' + (s[2] || '') + (s[3] ? '<p class="tip">💡 ' + s[3] + '</p>' : '') + '</div></div>'; }).join('');
       var al = $('#envAlert'); al.classList.remove('on');
       var inApp = /Line\/|FBAN|FBAV|Instagram|MicroMessenger|Twitter|KAKAOTALK|NAVER\(inapp|; wv\)/.test(ua);
       if (inApp) { al.innerHTML = '<b>いま、アプリ内のブラウザで開いています。</b>この画面では、ホーム画面に追加できません。右上や右下の「…」から<b>「' + (isIOS ? 'Safariで開く' : '他のブラウザで開く') + '」</b>を選んで、開き直してください。<br><button type="button" class="btn btn-sm" id="copyUrl" style="margin-top:8px">このページのURLをコピー</button>'; al.classList.add('on'); var cu = $('#copyUrl'); if (cu) cu.addEventListener('click', function () { try { navigator.clipboard.writeText(location.href).then(function () { toast('URLをコピーしました'); }); } catch (e) { toast('コピーできませんでした'); } }); }
