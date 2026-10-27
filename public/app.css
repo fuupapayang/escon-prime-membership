@@ -423,3 +423,5 @@ body.is-app a.prop-card{text-decoration:none}
 .gnav a.gnav-cta{margin-top:26px;border:0;text-align:center;background:linear-gradient(135deg,var(--gold),#7a5f25);border-radius:999px;font-size:15px;font-weight:700;letter-spacing:.1em;padding:15px}
 body.nav-open{overflow:hidden}
 body.is-app .gnav a.gnav-cta{display:none}
+
+section[id],#craftsman{scroll-margin-top:64px}
