@@ -283,6 +283,23 @@
     window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
 
     renderHomeSections();
+    /* TOPムービー(参照サイトと同じ YouTube 動画を、音なし・自動再生・ループで背景に敷く)。表示後に読み込み、モーション低減設定の端末では静止画のまま */
+    (function () {
+      var box = $('#heroYt'); if (!box || !box.dataset.yt) return;
+      if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var id = box.dataset.yt;
+      function start() {
+        var f = document.createElement('iframe');
+        f.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?autoplay=1&mute=1&controls=0&loop=1&playlist=' + encodeURIComponent(id) + '&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1';
+        f.allow = 'autoplay; encrypted-media; picture-in-picture'; f.setAttribute('tabindex', '-1'); f.title = 'TOP MOVIE'; f.loading = 'lazy';
+        f.addEventListener('load', function () { setTimeout(function () { box.classList.add('on'); }, 1200); });
+        box.appendChild(f);
+        /* 全面を覆う大きさ(cover)。さらに1.3倍に拡大し、YouTube のタイトルバー・ロゴを枠の外に追い出す */
+        function fit() { var p = box.parentNode.getBoundingClientRect(), w = p.width, h = p.height, r = 16 / 9, fw = Math.max(w, h * r) * 1.3; f.style.width = fw + 'px'; f.style.height = (fw / r) + 'px'; }
+        fit(); f.addEventListener('load', fit); window.addEventListener('resize', fit);
+      }
+      if (document.readyState === 'complete') start(); else window.addEventListener('load', start);
+    })();
     if (token()) $$('.head-cta,#ctaHero').forEach(function (a) { a.textContent = 'ご登録情報の再送・更新'; });
 
     if (!isApp) return;

@@ -402,3 +402,7 @@ a.prop-card{text-decoration:none}
 .lb-c{position:absolute;bottom:calc(16px + var(--safe-b));left:0;right:0;text-align:center;color:#fff;font-size:12px;letter-spacing:.2em}
 .ps-box>*{flex:none}
 .ps-box{overscroll-behavior:contain}
+/* TOPムービー(YouTube背景) */
+.hero-yt{position:absolute;inset:0;z-index:0;overflow:hidden;opacity:0;transition:opacity 1.2s;pointer-events:none}
+.hero-yt.on{opacity:1}
+.hero-yt iframe{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border:0;max-width:none;pointer-events:none}
