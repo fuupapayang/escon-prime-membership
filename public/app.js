@@ -339,9 +339,9 @@
     })();
     if (token()) $$('.head-cta,#ctaHero').forEach(function (a) { a.textContent = 'ご登録情報の再送・更新'; });
 
-    if (!isApp) return;
-    if (!token()) {
-      /* アプリは開けたが、この端末に会員情報がない: 行き止まりにならないよう、登録・引き継ぎの案内を常に出す */
+    /* 未登録(または登録情報を確認できない)状態の案内: 「登録を完了する」を目立つ場所に出す */
+    function enterGuest() {
+      if (document.body.classList.contains('is-guest')) { claimSheet(); return; }
       document.body.classList.add('is-guest');
       /* 目立つ場所に「登録を完了する」: ヘッダー・トップ・画面下の3か所 */
       $$('.head-cta,#ctaHero').forEach(function (x) { x.textContent = '登録を完了する'; x.classList.add('finish'); });
@@ -361,9 +361,11 @@
         + '<div class="gb-b"><a class="btn btn-red btn-sm finish" href="' + esc(gUrl('/register.html')) + '">登録を完了する</a><button type="button" class="btn btn-line btn-sm" id="gbClaim">引き継ぎコードを入力</button></div>';
       document.body.appendChild(bar); document.body.style.paddingBottom = '130px';
       $('#gbClaim', bar).addEventListener('click', claimSheet);
+      var fb = $('#fab'); if (fb) fb.classList.remove('on');
       claimSheet();
-      return;
     }
+    if (!isApp) return;
+    if (!token()) { enterGuest(); return; }
 
     var fab = $('#fab'); fab.classList.add('on');
     document.body.style.paddingBottom = '90px';
@@ -379,10 +381,11 @@
       S.me = r[0].customer; S.contents = (r[1] && r[1].contents) || []; S.personal = (r[1] && r[1].personalFiles) || [];
       S.pushes = Array.isArray(r[2]) ? r[2] : (r[2] && r[2].pushes) || [];
       updateBadge();
-    }).catch(function (e) { if (e.status === 401) { toast('ログイン情報が無効です。引き継ぎコードを入力するか、再度ご登録ください。'); claimSheet(); } });
+    }).catch(function (e) { if (e.status === 401) { lsSet(TOKEN_KEY, ''); enterGuest(); } });
 
     // first launch: ask for notifications right away (browsers require the user's own tap, so this is a one-tap sheet)
     loadP.then(function () {
+      if (document.body.classList.contains('is-guest')) return; /* 未登録の案内中は通知の案内を出さない */
       if (!('Notification' in window) || !('PushManager' in window) || !('serviceWorker' in navigator)) return;
       var force = qs.get('np') === '1'; // ?np=1 shows the sheet again (for checking the screen)
       if (Notification.permission === 'granted') { ensurePushSaved(); if (!force) return; }
