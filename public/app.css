@@ -70,8 +70,8 @@ footer.site-foot{background:#040c26;color:#8b95b3;text-align:center;font-size:11
 .gentei-fab .badge[hidden]{display:none}
 @keyframes pulse{0%,100%{box-shadow:0 12px 32px rgba(154,122,53,.45)}50%{box-shadow:0 12px 40px rgba(154,122,53,.75)}}
 .standalone-only{display:none}
-body.is-app .standalone-only{display:block}
-body.is-app .web-only{display:none!important}
+body.is-app:not(.is-guest) .standalone-only{display:block}
+body.is-app:not(.is-guest) .web-only{display:none!important}
 .app-badge{position:absolute;top:calc(14px + var(--safe-t));right:70px;}
 
 /* sub pages */
@@ -422,6 +422,32 @@ body.is-app a.prop-card{text-decoration:none}
 .gnav a:active{color:var(--gold-l)}
 .gnav a.gnav-cta{margin-top:26px;border:0;text-align:center;background:linear-gradient(135deg,var(--gold),#7a5f25);border-radius:999px;font-size:15px;font-weight:700;letter-spacing:.1em;padding:15px}
 body.nav-open{overflow:hidden}
-body.is-app .gnav a.gnav-cta{display:none}
+body.is-app:not(.is-guest) .gnav a.gnav-cta{display:none}
 
 section[id],#craftsman{scroll-margin-top:64px}
+
+/* アプリを開いたが未登録(ゲスト)の案内 */
+.claim-sheet{overflow-y:auto;align-items:flex-end}
+.claim-sheet .cs-box{max-height:94vh;max-height:94dvh;overflow-y:auto;text-align:left}
+.claim-sheet .cs-t{text-align:center;font-family:var(--serif);color:var(--navy-d);letter-spacing:.06em}
+.claim-sheet .cs-d{text-align:center}
+.cs-opt{border:1.5px solid var(--line);border-radius:14px;padding:14px 14px 12px;margin:0 0 12px;background:#fff}
+.cs-opt.cs-new{border-color:var(--gold);background:#fffaf0}
+.cs-opt .cs-h{font-weight:700;color:var(--navy-d);margin-bottom:4px;font-size:15px}
+.cs-opt .cs-h b{display:inline-flex;width:22px;height:22px;border-radius:50%;background:var(--navy);color:#fff;align-items:center;justify-content:center;font-size:12px;margin-right:6px}
+.cs-opt p{margin:0 0 10px;font-size:13px;line-height:1.75;color:#4a556e}
+.cs-help{margin-top:10px;font-size:12px;color:#6b7488}
+.cs-help summary{cursor:pointer;color:var(--navy)}
+.cs-help p{margin:6px 0 0;font-size:12px}
+.claim-sheet .cs-later{margin-top:2px}
+.guest-bar{position:fixed;left:0;right:0;bottom:0;z-index:70;background:var(--navy-d);color:#fff;padding:12px 16px calc(12px + var(--safe-b));box-shadow:0 -8px 24px rgba(0,0,0,.3)}
+.gb-t b{display:block;font-size:14px;color:var(--gold-l);letter-spacing:.04em}
+.gb-t span{display:block;font-size:12px;opacity:.88;line-height:1.6;margin:2px 0 8px}
+.gb-b{display:flex;gap:8px;flex-wrap:wrap}
+.gb-b .btn-line{background:transparent;color:#fff;border-color:rgba(255,255,255,.7)}
+.after-guide{margin-top:18px;padding:16px 16px 12px;border:1px solid #ecd9a4;background:#fff8e6;border-radius:14px}
+.after-guide .ag-h{font-weight:800;color:#6b5314;font-size:14px;margin-bottom:6px}
+.after-guide ol{margin:0;padding-left:20px;font-size:13px;line-height:1.85;color:#3d3216}
+.after-guide li{margin-bottom:8px}
+.after-guide li span{font-size:12px;color:#6b5314}
+.after-guide .ag-n{margin:4px 0 0;font-size:12px;color:#6b5314;line-height:1.7}

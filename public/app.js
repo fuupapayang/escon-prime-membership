@@ -243,16 +243,21 @@
     var old = $('#claimCard'); if (old) old.remove();
     host.appendChild(claimCardEl(code));
   }
-  function claimSheet() { /* standalone app without a registration in this storage: enter the code (or register) */
+  function claimSheet() { /* standalone app without a registration in this storage: choose "register" or "enter the carry-over code" */
     var sh = $('#claimSheet'); if (sh) { sh.hidden = false; return; }
     sh = document.createElement('div'); sh.id = 'claimSheet'; sh.className = 'claim-sheet';
-    sh.innerHTML = '<div class="cs-box" role="dialog" aria-modal="true"><div class="cs-t">ご登録の引き継ぎ</div>'
-      + '<p class="cs-d">Safariでご登録のときに表示された「引き継ぎコード」を入力してください。</p>'
+    sh.innerHTML = '<div class="cs-box" role="dialog" aria-modal="true"><div class="cs-t">ようこそ、プライムメンバーシップへ</div>'
+      + '<p class="cs-d">このアプリで限定情報をご覧いただくには、<b>会員登録</b>が必要です。<br>あてはまる方をお選びください。</p>'
+      + '<div class="cs-opt cs-new"><div class="cs-h"><b>A</b> まだ会員登録をしていない方</div>'
+      + '<p>お名前とメールアドレスのご登録（約1分・無料）で、すぐにご利用いただけます。</p>'
+      + '<a class="btn btn-red btn-block" href="' + esc(gUrl('/register.html')) + '" id="csReg">会員登録へ進む</a></div>'
+      + '<div class="cs-opt"><div class="cs-h"><b>B</b> すでに会員登録した方</div>'
+      + '<p>ご登録のとき（Safari・Chrome など）に画面に表示された、<b>8桁の「引き継ぎコード」</b>を入力してください。</p>'
       + '<input type="text" id="csCode" inputmode="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="9" placeholder="XXXX-XXXX" aria-label="引き継ぎコード">'
       + '<div class="cs-err" id="csErr" role="alert"></div>'
-      + '<button type="button" class="btn btn-red btn-block" id="csGo">引き継ぐ</button>'
-      + '<a class="cs-link" href="' + esc(gUrl('/register.html')) + '">コードがない・初めての方は会員登録</a>'
-      + '<button type="button" class="cs-later" id="csLater">あとで</button></div>';
+      + '<button type="button" class="btn btn-blue btn-block" id="csGo">引き継ぐ</button>'
+      + '<details class="cs-help"><summary>コードがわからないとき</summary><p>ご登録に使ったブラウザで、このサイトの「ホーム画面に追加」のページを開くと、引き継ぎコードをもう一度ご確認いただけます。見つからないときは、A の「会員登録」からもう一度お手続きください（同じメールアドレスで登録できます）。</p></details></div>'
+      + '<button type="button" class="cs-later" id="csLater">あとで（登録せずに閉じる）</button></div>';
     document.body.appendChild(sh);
     var inp = $('#csCode', sh), err = $('#csErr', sh), go = $('#csGo', sh);
     inp.addEventListener('input', function () { inp.value = fmtCode(inp.value); err.textContent = ''; });
@@ -262,7 +267,7 @@
       go.disabled = true; go.textContent = '確認中…'; err.textContent = '';
       api('/claim', { method: 'POST', body: { code: code } }).then(function (r) {
         lsSet(TOKEN_KEY, r.token); lsSet(CLAIM_KEY, normCode(r.claimCode) || code);
-        go.textContent = '引き継ぎました'; location.reload();
+        go.textContent = '引き継ぎました'; location.href = gUrl('/') + '?open=1';
       }).catch(function (e) {
         go.disabled = false; go.textContent = '引き継ぐ';
         err.textContent = e.status === 404 ? 'コードが見つかりません。もう一度ご確認ください。' : e.status === 409 ? 'この端末はすでに登録済みです。' : '通信に失敗しました。電波の良い場所でもう一度お試しください。';
@@ -336,9 +341,14 @@
 
     if (!isApp) return;
     if (!token()) {
-      // installed but no token (e.g. iOS separate storage): allow re-identification via register
-      var fab0 = $('#fab'); fab0.classList.add('on'); fab0.firstChild.textContent = '引き継ぎコードを入力 ';
-      fab0.addEventListener('click', claimSheet);
+      /* アプリは開けたが、この端末に会員情報がない: 行き止まりにならないよう、登録・引き継ぎの案内を常に出す */
+      document.body.classList.add('is-guest');
+      $$('[data-open]').forEach(function (b) { b.addEventListener('click', claimSheet); });
+      var bar = document.createElement('div'); bar.className = 'guest-bar';
+      bar.innerHTML = '<div class="gb-t"><b>会員登録がまだ完了していません</b><span>限定情報をご覧いただくには、会員登録（無料）か、引き継ぎコードの入力が必要です。</span></div>'
+        + '<div class="gb-b"><a class="btn btn-red btn-sm" href="' + esc(gUrl('/register.html')) + '">会員登録へ</a><button type="button" class="btn btn-line btn-sm" id="gbClaim">引き継ぎコードを入力</button></div>';
+      document.body.appendChild(bar); document.body.style.paddingBottom = '130px';
+      $('#gbClaim', bar).addEventListener('click', claimSheet);
       claimSheet();
       return;
     }
@@ -753,9 +763,13 @@
         lsSet(TOKEN_KEY, r.token);
         if (r.claimCode) { lsSet(CLAIM_KEY, normCode(r.claimCode)); var cnt = $('#cd'); showClaimCard($('#s3'), r.claimCode); var cc = $('#claimCard'); if (cc && cnt && cnt.parentNode) cnt.parentNode.parentNode.insertBefore(cc, cnt.parentNode); }
         $('#d-name').textContent = (r.customer && r.customer.name) || data.name;
+        if (isApp) { /* すでにアプリ内で登録している場合: 追加手順ではなく、そのままアプリ画面へ */
+          var nt = $('#s3 .note'); if (nt) nt.innerHTML = '続いて、限定情報の画面へ移動します。<br><b style="color:var(--red)">通知を「オン」にすると、新着情報がすぐ届きます。</b>';
+          var lk = $('#s3 a.btn'); if (lk) { lk.href = gUrl('/') + '?open=1'; lk.textContent = '限定情報を見る'; }
+        }
         show(2);
         var bar = $('#bar'); requestAnimationFrame(function () { requestAnimationFrame(function () { bar.style.width = '100%'; }); });
-        var n = 3, cd = $('#cd'), t = setInterval(function () { n--; cd.textContent = Math.max(n, 0); if (n <= 0) { clearInterval(t); location.href = gUrl('/install.html'); } }, 1000);
+        var n = 3, cd = $('#cd'), t = setInterval(function () { n--; cd.textContent = Math.max(n, 0); if (n <= 0) { clearInterval(t); location.href = isApp ? gUrl('/') + '?open=1' : gUrl('/install.html'); } }, 1000);
       }).catch(function (e) {
         b.disabled = false; b.textContent = '登録する';
         var box = $('#errBox2'); box.textContent = '登録に失敗しました。通信状況をご確認のうえ、もう一度お試しください。'; box.classList.add('on');
@@ -912,7 +926,12 @@
       deferred.userChoice.then(function (c) { if (c.outcome === 'accepted') { logEvent('install', platform); toast('ホーム画面に追加しました'); } deferred = null; draw(); });
     });
     window.addEventListener('appinstalled', function () { lsSet('escon-prime-ms.installLogged', '1'); logEvent('install', platform); });
-    if (isApp) { $('#doneCard').hidden = false; $('#steps').hidden = true; $('#tabs').hidden = true; }
+    if (isApp) {
+      $('#doneCard').hidden = false; $('#steps').hidden = true; $('#tabs').hidden = true; var sub0 = $('#subTabs'); if (sub0) sub0.hidden = true; var sl = $('#sumLine'); if (sl) sl.hidden = true; var ag = $('#afterGuide'); if (ag) ag.hidden = true;
+      if (!token()) { /* アプリは開けたが会員情報がない */
+        var dc = $('#doneCard'); dc.innerHTML = '<b>アプリのインストールは完了しています</b><p style="margin:8px 0 12px;font-size:13px;line-height:1.8;opacity:.92">つぎに、<b>会員登録</b>、またはご登録済みの方は<b>引き継ぎコードの入力</b>をお願いします。</p><a class="btn btn-red btn-sm" href="' + esc(gUrl('/register.html')) + '">会員登録へ</a> <a class="btn btn-sm" style="margin-left:6px" href="' + esc(gUrl('/')) + '">引き継ぎコードを入力</a>';
+      }
+    }
     draw();
     if (token()) api('/me').then(function (r) { $('#who').textContent = r.customer.name + '様、'; }).catch(function () {});
     /* 引き継ぎコード card: right below the headline; customers registered before codes existed get one minted on demand */
