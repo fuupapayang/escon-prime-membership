@@ -283,6 +283,18 @@
     window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
 
     renderHomeSections();
+    /* ハンバーガーメニュー */
+    (function () {
+      var bt = $('#burger'), nav = $('#gnav'); if (!bt || !nav) return;
+      function set(open) {
+        nav.hidden = !open; bt.classList.toggle('on', open); bt.setAttribute('aria-expanded', open ? 'true' : 'false');
+        bt.setAttribute('aria-label', open ? 'メニューを閉じる' : 'メニューを開く'); document.body.classList.toggle('nav-open', open);
+      }
+      bt.addEventListener('click', function () { set(nav.hidden); });
+      $$('a', nav).forEach(function (l) { l.addEventListener('click', function () { set(false); }); });
+      nav.addEventListener('click', function (e) { if (e.target === nav) set(false); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !nav.hidden) set(false); });
+    })();
     /* TOPムービー: 参照サイトと同じ YouTube 動画(PC=rzJOeBftwNM 13秒から / スマホ=epWL0sYdzBA)を、音なし・自動再生・終了後は頭から繰り返しで背景に敷く。
        モーション低減設定の端末では再生せず静止画のまま */
     (function () {

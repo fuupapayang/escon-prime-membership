@@ -353,13 +353,7 @@ body[data-page="register"] .page,body[data-page="install"] .page{background:line
 @media(max-width:480px){.sec h2{font-size:20px}}
 
 /* ===== 参照サイトのコンテンツ一式(物件・ギャラリー・インタビュー・ムービー) ===== */
-.subnav{position:fixed;left:0;right:0;top:calc(58px + var(--safe-t));z-index:39;display:flex;gap:4px;overflow-x:auto;padding:0 12px;background:rgba(6,26,61,.82);backdrop-filter:blur(8px);scrollbar-width:none}
-.subnav::-webkit-scrollbar{display:none}
-.subnav a{flex:none;color:#fff;text-decoration:none;font-size:11px;letter-spacing:.12em;padding:9px 10px;opacity:.88;white-space:nowrap}
-.subnav a:active{opacity:1}
-body.is-app .subnav{display:none}
-.hero{padding-top:36px}
-a.prop-card{text-decoration:none}
+body.is-app a.prop-card{text-decoration:none}
 .prop-card.ex .pc-img{height:170px}
 #ccGrid .more{display:none}
 #ccGrid.open .more{display:block}
@@ -412,3 +406,20 @@ a.prop-card{text-decoration:none}
 .env-tabs.sub button i{position:absolute;left:0;right:0;bottom:1px;font-style:normal;font-size:8px;font-weight:700;color:var(--gold);letter-spacing:.04em}
 .pc-note{background:#fff8e6;border:1px solid #ecd9a4;color:#6b5314;border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.8;margin:6px 0 4px}
 .step-card .tip{margin:10px 0 0;font-size:12px;color:#6b5314;background:#fff8e6;border-radius:10px;padding:8px 10px;line-height:1.7}
+
+/* ハンバーガーメニュー */
+.head-r{display:flex;align-items:center;gap:12px}
+.burger{width:42px;height:42px;border:0;border-radius:50%;background:rgba(255,255,255,.14);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:0;position:relative;z-index:101}
+.burger span{display:block;width:20px;height:2px;border-radius:2px;background:#fff;transition:transform .25s,opacity .2s}
+.burger.on span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.burger.on span:nth-child(2){opacity:0}
+.burger.on span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.site-head{z-index:100}
+.gnav{position:fixed;inset:0;z-index:99;background:rgba(4,12,38,.96);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:80px 28px 40px;animation:fade .25s}
+.gnav[hidden]{display:none}
+.gnav-in{width:100%;max-width:420px;display:flex;flex-direction:column}
+.gnav a{color:#fff;text-decoration:none;font-family:var(--serif);font-size:19px;letter-spacing:.14em;padding:17px 4px;border-bottom:1px solid rgba(255,255,255,.18)}
+.gnav a:active{color:var(--gold-l)}
+.gnav a.gnav-cta{margin-top:26px;border:0;text-align:center;background:linear-gradient(135deg,var(--gold),#7a5f25);border-radius:999px;font-size:15px;font-weight:700;letter-spacing:.1em;padding:15px}
+body.nav-open{overflow:hidden}
+body.is-app .gnav a.gnav-cta{display:none}

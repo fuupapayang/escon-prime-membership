@@ -19,10 +19,21 @@
 <body data-page="home">
 <header class="site-head" id="head">
   <a class="logo" href="./" aria-label="エスコン プライムメンバーシップ"><img class="escon-logo inv" src="assets/img/common_escon.svg" alt="ES CON エスコン"><small>PRIME MEMBERSHIP</small></a>
-  <a class="head-cta web-only" href="register.html">会員登録</a>
+  <div class="head-r">
+    <a class="head-cta web-only" href="register.html">会員登録</a>
+    <button type="button" class="burger" id="burger" aria-label="メニューを開く" aria-expanded="false" aria-controls="gnav"><span></span><span></span><span></span></button>
+  </div>
 </header>
-<nav class="subnav" id="subnav" aria-label="ページ内メニュー">
-  <a href="#hero">HOME</a><a href="#releases">NEWS &amp; TOPICS</a><a href="#gallery">GALLERY</a><a href="#movie">Concept Movie</a><a href="#essence">継承される5つの真髄</a><a href="#craftsman">クラフトマンインタビュー</a>
+<nav class="gnav" id="gnav" aria-label="メニュー" hidden>
+  <div class="gnav-in">
+    <a href="#hero">HOME</a>
+    <a href="#releases">NEWS &amp; TOPICS</a>
+    <a href="#gallery">GALLERY</a>
+    <a href="#movie">Concept Movie</a>
+    <a href="#essence">継承される5つの真髄</a>
+    <a href="#craftsman">クラフトマンインタビュー</a>
+    <a class="gnav-cta web-only" href="register.html">会員登録はこちらから</a>
+  </div>
 </nav>
 
 <main>
