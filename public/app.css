@@ -461,3 +461,32 @@ section[id],#craftsman{scroll-margin-top:64px}
 @keyframes pulseGold{0%,100%{box-shadow:0 8px 22px rgba(154,122,53,.35)}50%{box-shadow:0 8px 30px rgba(154,122,53,.8)}}
 .head-cta.finish{animation:pulseGold 2.2s infinite}
 .guest-bar .btn.finish{font-size:15px;padding:12px 20px}
+
+/* ---- install page: one-tap first, steps folded, claim code last ---- */
+.one-tap{margin:18px 0 6px;text-align:center}
+.one-tap .ot-lead{margin:0 0 12px;font-size:14px;font-weight:700;color:var(--blue-d);line-height:1.7}
+.one-tap .install-btn{font-size:17px;padding:17px 12px}
+.one-tap .ot-n{margin:10px 2px 0;font-size:12.5px;color:var(--mute);line-height:1.7}
+.inst-done{margin:18px 0 6px;padding:18px 16px 14px;border-radius:14px;background:#f3f8f1;border:1px solid #bfdcb8}
+.inst-done .id-ok{font-size:18px;font-weight:800;color:#2b6a2b;text-align:center;margin-bottom:10px}
+.inst-done ol{margin:0;padding-left:22px;font-size:14px;line-height:1.85;color:#243b24}
+.inst-done li{margin-bottom:10px}
+.inst-done li span{font-size:12px;color:#4d6a4d}
+.inst-done .id-n{margin:4px 0 0;text-align:center;font-size:12px;color:#4d6a4d}
+details.manual,details.claim-box{margin-top:16px;border:1px solid #dfe4ef;border-radius:12px;background:#fafbfd;padding:0 12px}
+details.manual>summary,details.claim-box>summary{cursor:pointer;padding:13px 2px;font-size:13.5px;font-weight:700;color:var(--blue-d);list-style:none}
+details.manual>summary::before,details.claim-box>summary::before{content:"＋ ";color:var(--red)}
+details[open].manual>summary::before,details[open].claim-box>summary::before{content:"－ "}
+details.manual[open],details.claim-box[open]{padding-bottom:12px}
+details.manual .env-tabs{margin-top:4px}
+.claim-box .cb-why{font-size:12.5px;line-height:1.8;color:#3d4660;margin-bottom:4px}
+.claim-box .claim-card{margin:10px 0 0}
+.tap-guide{position:fixed;left:50%;transform:translateX(-50%);z-index:10000;width:calc(100% - 24px);max-width:460px;background:#0b2a5b;color:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 10px 30px rgba(0,0,0,.35);line-height:1.6}
+.tap-guide.bottom{bottom:16px}
+.tap-guide.top{top:12px}
+.tap-guide .tg-h{font-size:13px;font-weight:800;margin-bottom:8px}
+.tap-guide .tg-s{display:flex;align-items:center;gap:8px;font-size:14px;margin:4px 0}
+.tap-guide .tg-n{display:inline-flex;flex:none;width:22px;height:22px;border-radius:50%;background:#9a7a35;color:#fff;font-size:12px;font-weight:800;align-items:center;justify-content:center}
+.tap-guide .tg-b{background:#fff;color:#0b2a5b;border-radius:999px;padding:2px 12px}
+.tap-guide .tg-n2{margin-top:6px;font-size:11.5px;opacity:.8}
+.link-btn{background:none;border:0;padding:6px 0 10px;color:var(--blue);font-size:12.5px;text-decoration:underline;cursor:pointer}

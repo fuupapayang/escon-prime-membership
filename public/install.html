@@ -24,28 +24,42 @@
   </div>
   <div class="wrap">
     <div class="card">
-      <div class="center"><span class="pill">約30秒</span>
-        <h2 class="serif" style="margin:12px 0 4px;font-size:19px;letter-spacing:.08em"><span id="who"></span>あと少しで完了です</h2>
-        <p class="note" style="margin:0">お使いの環境：<b id="envLabel" style="color:var(--blue)">-</b></p>
+      <div class="center">
+        <h2 class="serif" style="margin:4px 0 6px;font-size:19px;letter-spacing:.08em"><span id="who"></span>ホーム画面に追加します</h2>
+        <p class="note" style="margin:0;display:none">お使いの環境：<b id="envLabel">-</b></p>
       </div>
-      <div class="env-tabs" id="tabs">
-        <button data-env="ios">iPhone</button><button data-env="android">Android</button><button data-env="pc">パソコン</button>
-      </div>
-      <div class="env-tabs sub" id="subTabs" hidden></div>
       <div class="alert" id="envAlert"></div>
-      <div class="sum-line" id="sumLine"></div>
-      <button class="btn btn-red btn-block install-btn" id="installBtn" hidden>ワンタップでホーム画面に追加</button>
-      <div id="steps"></div>
-      <div class="after-guide" id="afterGuide">
-        <div class="ag-h">インストールが終わったら（アプリを開いたあとの流れ）</div>
+
+      <section class="one-tap" id="oneTap" hidden>
+        <p class="ot-lead">下のボタンを押すだけで、アプリのように使えるようになります。</p>
+        <button class="btn btn-red btn-block install-btn" id="installBtn" type="button">ホーム画面に追加する</button>
+        <p class="ot-n">押すと、小さな確認画面が出ます。画面の案内にしたがって「インストール」を押してください。</p>
+      </section>
+
+      <section class="inst-done" id="instDone" hidden>
+        <div class="id-ok">✓ インストールできました</div>
         <ol>
-          <li><b>アプリを開く</b>：自動で開かないときは、ホーム画面（パソコンはデスクトップ・Dock・スタートメニュー）の「プライム」のアイコンを押します。</li>
-          <li><b>「引き継ぎコード」の画面が出たら</b>：このページの上に表示されている<b>8桁のコード</b>を入力して「引き継ぐ」を押します。<br><span>iPhone は必ず出ます。パソコン・Android は、そのまま開くことが多く、その場合は入力不要です。</span></li>
-          <li><b>通知を「オン」にする</b>：「通知をオンにする」を押し、表示された画面で「許可」を選びます。これで新着情報が届きます。</li>
+          <li id="idMacLi"><b>「アプリでタブを開く」</b>が出ているときは、それを押します。<br><span>（画面の上に出る小さな画面です。出ていなければ、次へ進んでください）</span></li>
+          <li>開いたアプリの画面で、<b>「通知をオンにする」</b>を押し、「許可」を選びます。<br><span>アプリが開かないときは、ホーム画面・Dock・スタートメニューの「プライム」のアイコンを押してください。</span></li>
         </ol>
-        <p class="ag-n">コードが出て「会員登録がまだ完了していません」と表示されたときは、画面の「会員登録へ」から、お名前とメールアドレスをご登録ください。</p>
-      </div>
-      <div class="done-card" id="doneCard" hidden><b>インストール済みです</b><p style="margin:6px 0 12px;font-size:12px;opacity:.85">ホーム画面のアイコンから起動してください。</p><a class="btn btn-red btn-sm" href="./">TOPへ</a></div>
+        <p class="id-n">この画面（ブラウザ）は、閉じて構いません。</p>
+      </section>
+
+      <details class="manual" id="manual">
+        <summary id="manualSum">ボタンが動かないとき（手順を見る）</summary>
+        <button type="button" class="link-btn" id="tabsLink">別の端末（iPhone・Android・パソコン）の手順を見る</button>
+        <div class="env-tabs" id="tabs" hidden>
+          <button data-env="ios">iPhone</button><button data-env="android">Android</button><button data-env="pc">パソコン</button>
+        </div>
+        <div class="env-tabs sub" id="subTabs" hidden></div>
+        <div id="steps"></div>
+      </details>
+
+      <details class="claim-box" id="claimBox">
+        <summary id="claimSum">引き継ぎコード（通常は使いません）</summary>
+        <div class="cb-why" id="claimWhy"></div>
+        <div id="claimHost"></div>
+      </details>
     </div>
     <p class="center note" style="margin-bottom:34px"><a href="./">公式サイトに戻る</a></p>
   </div>

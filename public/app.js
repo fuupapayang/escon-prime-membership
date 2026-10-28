@@ -233,7 +233,7 @@
     var el = document.createElement('div'); el.className = 'claim-card'; el.id = 'claimCard';
     el.innerHTML = '<div class="claim-h">引き継ぎコード</div><div class="claim-code">' + esc(fmtCode(code)) + '</div>'
       + '<button type="button" class="btn btn-blue btn-sm claim-copy">コードをコピー</button>'
-      + '<p>ホーム画面のアプリを初めて開いたときに、このコードを入力すると、登録が引き継がれます。メモやスクリーンショットで控えておくと安心です。</p>';
+      + '<p>いまの登録を、ホーム画面のアプリに移すための番号です。アプリの最初の画面で入力を求められたときだけ使います。スクリーンショットで控えておくと安心です。</p>';
     $('.claim-copy', el).addEventListener('click', function () { copyCode(fmtCode(code)).then(function () { toast('コードをコピーしました'); }).catch(function () { toast('コピーできませんでした。コードを長押ししてコピーしてください'); }); });
     return el;
   }
@@ -390,7 +390,7 @@
       var force = qs.get('np') === '1'; // ?np=1 shows the sheet again (for checking the screen)
       if (Notification.permission === 'granted') { ensurePushSaved(); if (!force) return; }
       else if (Notification.permission !== 'default' && !force) return;
-      var later = parseInt(lsGet('escon-prime-ms.notifLater') || '0', 10);
+      var later = qs.get('from') === 'install' ? 0 : parseInt(lsGet('escon-prime-ms.notifLater') || '0', 10);
       if (!force && later && Date.now() - later < 7 * 86400000) return;
       var sh = document.createElement('div');
       sh.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center';
@@ -924,35 +924,65 @@
         $$('button', sub).forEach(function (b) { b.addEventListener('click', function () { pcVar = b.dataset.v; draw(); }); });
       }
       var SUM = { ios: ['共有ボタン', 'ホーム画面に追加', '追加'], android: ['右上の︙', 'アプリをインストール', 'インストール'], pc: PCS[pcVar].sum }[env];
-      $('#sumLine').innerHTML = '<span class="sum-h">この3回タップするだけ</span>' + SUM.map(function (t, i) { return '<span class="sum-i"><b>' + (i + 1) + '</b>' + t + '</span>'; }).join('<span class="sum-a">›</span>');
       var list = env === 'pc' ? PCS[pcVar].steps : STEPS[env];
       $('#steps').innerHTML = (env === 'pc' && PCS[pcVar].note ? '<div class="pc-note">' + PCS[pcVar].note + '</div>' : '') + list.map(function (s, i) { return '<div class="step-card"><div class="step-no">0' + (i + 1) + '</div><div class="step-body"><h3>' + s[0] + '</h3><p>' + s[1] + '</p>' + (s[2] || '') + (s[3] ? '<p class="tip">💡 ' + s[3] + '</p>' : '') + '</div></div>'; }).join('');
+      $('#tabs').hidden = !tabsOpen; $('#tabsLink').hidden = tabsOpen;
       var al = $('#envAlert'); al.classList.remove('on');
       var inApp = /Line\/|FBAN|FBAV|Instagram|MicroMessenger|Twitter|KAKAOTALK|NAVER\(inapp|; wv\)/.test(ua);
       if (inApp) { al.innerHTML = '<b>いま、アプリ内のブラウザで開いています。</b>この画面では、ホーム画面に追加できません。右上や右下の「…」から<b>「' + (isIOS ? 'Safariで開く' : '他のブラウザで開く') + '」</b>を選んで、開き直してください。<br><button type="button" class="btn btn-sm" id="copyUrl" style="margin-top:8px">このページのURLをコピー</button>'; al.classList.add('on'); var cu = $('#copyUrl'); if (cu) cu.addEventListener('click', function () { try { navigator.clipboard.writeText(location.href).then(function () { toast('URLをコピーしました'); }); } catch (e) { toast('コピーできませんでした'); } }); }
       else if (env === 'ios' && isIOS && !isSafari) { al.innerHTML = '<b>Safariで開いてください。</b>iPhoneではSafari以外のブラウザからホーム画面に追加できない場合があります。このページのURLをSafariで開き直してください。'; al.classList.add('on'); }
       else if (env === 'ios' && !isIOS) { al.textContent = 'この手順はiPhone / iPad用です。お手持ちのiPhoneのSafariでこのページを開いてください。'; al.classList.add('on'); }
-      $('#installBtn').hidden = !(deferred && env !== 'ios');
+      refreshMain();
+    }
+    /* メイン: ワンタップのボタンがあればそれだけ。無ければ(iPhoneなど)手順を開いて見せる */
+    var tapFailed = false, tabsOpen = false;
+    $('#tabsLink').addEventListener('click', function () { tabsOpen = true; draw(); });
+    function refreshMain() {
+      var can = !!deferred && platform !== 'ios';
+      $('#oneTap').hidden = !can;
+      var m = $('#manual');
+      $('#manualSum').textContent = can || tapFailed ? 'ボタンが動かないとき（手順を見る）' : platform === 'ios' ? 'iPhone：ホーム画面に追加する手順' : '追加する手順（01〜05）';
+      if (!m.dataset.touched) m.open = !can;
+      var cb = $('#claimBox'); if (cb && !cb.dataset.touched) cb.open = false;
+    }
+    $('#manualSum').addEventListener('click', function () { $('#manual').dataset.touched = '1'; });
+    function tapGuide(on) {
+      var g = $('#tapGuide');
+      if (!on) { if (g) g.remove(); return; }
+      if (g) return;
+      g = document.createElement('div'); g.id = 'tapGuide'; g.className = 'tap-guide ' + (platform === 'pc' ? 'bottom' : 'top');
+      g.innerHTML = platform === 'pc'
+        ? '<div class="tg-h">いま、画面の上のほうに小さな確認画面が出ています</div><div class="tg-s"><span class="tg-n">1</span>「<b class="tg-b">次へ</b>」が出たら押す</div><div class="tg-s"><span class="tg-n">2</span>「<b class="tg-b">インストール</b>」を押す</div><div class="tg-n2">※ 出ない場合は、もう一度「ホーム画面に追加する」を押してください</div>'
+        : '<div class="tg-h">確認の画面が出ています</div><div class="tg-s"><span class="tg-n">1</span>「<b class="tg-b">インストール</b>」（または「追加」）を押す</div>';
+      document.body.appendChild(g);
+    }
+    function showInstalled() {
+      tapGuide(false);
+      $('#oneTap').hidden = true; $('#manual').hidden = true; $('#instDone').hidden = false;
+      $('#idMacLi').hidden = platform !== 'pc' || !isMac;
+      try { window.scrollTo(0, 0); } catch (e) {}
     }
     $$('#tabs button').forEach(function (b) { b.addEventListener('click', function () { env = b.dataset.env; draw(); }); });
-    window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferred = e; draw(); });
+    window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferred = e; tapFailed = false; draw(); });
     $('#installBtn').addEventListener('click', function () {
-      if (!deferred) return; deferred.prompt();
-      deferred.userChoice.then(function (c) { if (c.outcome === 'accepted') { logEvent('install', platform); toast('ホーム画面に追加しました'); } deferred = null; draw(); });
+      if (!deferred) return; var d = deferred; d.prompt(); tapGuide(true);
+      d.userChoice.then(function (c) {
+        deferred = null;
+        if (c.outcome === 'accepted') { logEvent('install', platform); lsSet('escon-prime-ms.installLogged', '1'); showInstalled(); }
+        else { tapGuide(false); tapFailed = true; var m = $('#manual'); delete m.dataset.touched; draw(); toast('キャンセルされました。もう一度お試しいただくか、下の手順をご覧ください'); }
+      });
     });
-    window.addEventListener('appinstalled', function () { lsSet('escon-prime-ms.installLogged', '1'); logEvent('install', platform); });
-    if (isApp) {
-      $('#doneCard').hidden = false; $('#steps').hidden = true; $('#tabs').hidden = true; var sub0 = $('#subTabs'); if (sub0) sub0.hidden = true; var sl = $('#sumLine'); if (sl) sl.hidden = true; var ag = $('#afterGuide'); if (ag) ag.hidden = true;
-      if (!token()) { /* アプリは開けたが会員情報がない */
-        var dc = $('#doneCard'); dc.innerHTML = '<b>アプリのインストールは完了しています</b><p style="margin:8px 0 12px;font-size:13px;line-height:1.8;opacity:.92">つぎに、<b>会員登録</b>、またはご登録済みの方は<b>引き継ぎコードの入力</b>をお願いします。</p><a class="btn btn-red btn-sm" href="' + esc(gUrl('/register.html')) + '">会員登録へ</a> <a class="btn btn-sm" style="margin-left:6px" href="' + esc(gUrl('/')) + '">引き継ぎコードを入力</a>';
-      }
-    }
+    window.addEventListener('appinstalled', function () { lsSet('escon-prime-ms.installLogged', '1'); logEvent('install', platform); showInstalled(); });
+    /* アプリ(ホーム画面)の中でこのページが開いたら、案内は不要: ホームへ進み、通知の「オン」だけを出す */
+    if (isApp) { location.replace(gUrl('/') + '?open=1&from=install'); return; }
     draw();
     if (token()) api('/me').then(function (r) { $('#who').textContent = r.customer.name + '様、'; }).catch(function () {});
-    /* 引き継ぎコード card: right below the headline; customers registered before codes existed get one minted on demand */
+    /* 引き継ぎコード: 手順の下の折りたたみへ(iPhoneは必要なので開いておく。ほかは「通常は使いません」) */
     (function () {
-      var anchor = $('#tabs'); if (!anchor || !token() || isApp) return;
-      var put = function (c) { c = normCode(c); if (c.length !== 8) return; var tmp = document.createElement('div'); showClaimCard(tmp, c); var el = tmp.firstChild; if (el && anchor.parentNode) anchor.parentNode.insertBefore(el, anchor); };
+      var host = $('#claimHost'), box = $('#claimBox'); if (!host || !box) return;
+      if (platform === 'ios') { box.open = true; $('#claimSum').textContent = 'iPhoneの方へ：アプリを開いたら「引き継ぎコード」を入力'; $('#claimWhy').innerHTML = 'ホーム画面に追加したアプリは、Safari とは別の入れ物です。<b>アプリを最初に開いたとき</b>に聞かれる「引き継ぎコード」に、下の番号を入力してください。'; }
+      if (!token() || platform !== 'ios') { box.hidden = true; return; }
+      var put = function (c) { c = normCode(c); if (c.length !== 8) return; showClaimCard(host, c); };
       var have = normCode(lsGet(CLAIM_KEY));
       if (have.length === 8) put(have);
       else api('/claim-code', { method: 'POST', body: {} }).then(function (r) { if (r && r.claimCode) { lsSet(CLAIM_KEY, normCode(r.claimCode)); put(r.claimCode); } }).catch(function () {});
