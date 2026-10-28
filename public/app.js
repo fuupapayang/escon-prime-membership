@@ -956,6 +956,23 @@
         : '<div class="tg-h">確認の画面が出ています</div><div class="tg-s"><span class="tg-n">1</span>「<b class="tg-b">インストール</b>」（または「追加」）を押す</div>';
       document.body.appendChild(g);
     }
+    var HOME = gUrl('/') + '?open=1&from=install';
+    function goHome() { location.href = HOME; }
+    $('#skipNotif').addEventListener('click', function (e) { e.preventDefault(); goHome(); });
+    $('#notifGo').addEventListener('click', function () {
+      var b = this; if (!('Notification' in window) || !('serviceWorker' in navigator)) return goHome();
+      b.disabled = true; b.textContent = '設定中…';
+      Notification.requestPermission().then(function (perm) {
+        if (perm !== 'granted') return;
+        return Promise.all([navigator.serviceWorker.ready, api('/vapid-public-key')]).then(function (r) {
+          if (!r[1].key || !r[0].pushManager) return;
+          var k = r[1].key, p = '='.repeat((4 - k.length % 4) % 4), raw = atob((k + p).replace(/-/g, '+').replace(/_/g, '/')), u = new Uint8Array(raw.length);
+          for (var i = 0; i < raw.length; i++) u[i] = raw.charCodeAt(i);
+          return r[0].pushManager.getSubscription().then(function (s) { return s || r[0].pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: u }); })
+            .then(function (sub) { return api('/push/subscribe', { method: 'POST', body: { subscription: sub.toJSON ? sub.toJSON() : sub, platform: platform } }); });
+        });
+      }).catch(function (e) { console.warn(e); }).then(goHome);
+    });
     function showInstalled() {
       tapGuide(false);
       $('#oneTap').hidden = true; $('#manual').hidden = true; $('#instDone').hidden = false;
