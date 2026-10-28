@@ -776,7 +776,7 @@
       var body = { name: data.name, email: data.email }; var tg = (data.tags || []).slice(); if (token0) token0.split(',').forEach(function (t) { if (t && tg.indexOf(t) < 0) tg.push(t); }); if (tg.length) body.tags = tg.slice(0, 10);
       api('/register', { method: 'POST', body: body }).then(function (r) {
         lsSet(TOKEN_KEY, r.token);
-        if (r.claimCode) { lsSet(CLAIM_KEY, normCode(r.claimCode)); var cnt = $('#cd'); showClaimCard($('#s3'), r.claimCode); var cc = $('#claimCard'); if (cc && cnt && cnt.parentNode) cnt.parentNode.parentNode.insertBefore(cc, cnt.parentNode); }
+        if (r.claimCode) lsSet(CLAIM_KEY, normCode(r.claimCode)); /* コードはインストール画面(iPhoneのみ)で案内 */
         $('#d-name').textContent = (r.customer && r.customer.name) || data.name;
         if (isApp) { /* すでにアプリ内で登録している場合: 追加手順ではなく、そのままアプリ画面へ */
           var nt = $('#s3 .note'); if (nt) nt.innerHTML = '続いて、限定情報の画面へ移動します。<br><b style="color:var(--red)">通知を「オン」にすると、新着情報がすぐ届きます。</b>';
